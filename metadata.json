@@ -1,0 +1,6 @@
+{
+  "name": "VeloCortex Global Container Tracker",
+  "description": "Interactive real-time global logistics command center tracking cargo ships and containers with temperature monitoring, route bottlenecks, predictive ETA analytics, and zero-trust IoT architecture.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
