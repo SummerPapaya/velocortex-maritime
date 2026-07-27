@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🚢 VeloCortex AI
-### Global Intermodal Container Intelligence & Cold-Chain Telemetry Platform
+### Global Maritime & Intermodal Container Track-and-Trace Intelligence Platform
 
 [![React 19](https://img.shields.io/badge/React-19.0-blue.svg?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6.svg?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -16,7 +16,7 @@
 
 <p align="center">
   <b>Next-Generation Maritime & Intermodal Supply Chain Command Center</b><br>
-  Real-time satellite tracking, biopharma cold-chain IoT telemetry, proactive demurrage risk prevention, and AI-driven route optimization.
+  Real-time vessel and container tracking, predictive ETA analytics, demurrage risk mitigation, IoT telemetry (with optional specialized cold-chain monitoring), and AI-driven route optimization.
 </p>
 
 [Key Features](#--key-features) • [Architecture](#--system-architecture) • [Tech Stack](#--technology-stack) • [Quick Start](#--quick-start) • [Export Engine](#--multi-format-export-engine) • [i18n Localization](#--bilingual-localization)
@@ -27,9 +27,9 @@
 
 ## 🌟 Overview
 
-In global logistics, a single 2°C temperature excursion or unexpected terminal congestion can ruin millions of dollars in high-value biopharma pharmaceuticals, perishable agricultural goods, or precision electronics. 
+In modern global maritime logistics and intermodal supply chains, end-to-end real-time visibility is essential. Unforeseen terminal congestion, port bottleneck delays, container demurrage risks, or environmental deviations (such as temperature fluctuations in perishable cargo) can disrupt operations and cause substantial financial losses.
 
-**VeloCortex AI** bridges the visibility gap across transpacific and transatlantic shipping routes. By integrating **real-time Iridium satellite telemetry**, **interactive maritime mapping**, and **Google Gemini AI predictive analytics**, VeloCortex transforms raw IoT sensor streams into actionable supply chain intelligence.
+**VeloCortex AI** bridges the visibility gap across global shipping lanes and major oceanic corridors. By integrating **real-time Iridium satellite telemetry**, **interactive maritime mapping**, and **Google Gemini AI predictive analytics**, VeloCortex delivers comprehensive track-and-trace capabilities for cargo vessels, standard containers, and specialized reefers—transforming raw data streams into actionable supply chain intelligence.
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -38,9 +38,9 @@ In global logistics, a single 2°C temperature excursion or unexpected terminal 
 |   [ 🛰️ Iridium IoT Telemetry ] ---> [ 🚢 Global Fleet Map ] ---> [ 🧠 Gemini AI ] |
 |            |                                |                           |         |
 |            v                                v                           v         |
-|  * Biopharma Reefer Temp (°C)    * Active Container Tracking   * Demurrage Risk   |
-|  * Door Seal Integrity & Shock   * Terminal Congestion Alerts  * Route SLA Audits |
-|  * Real-time Humidity (% RH)     * Dynamic CRUD & Custom POs   * Actionable Advice|
+|  * Active Container & Fleet Tracking  * Port Bottleneck & Dwell Analytics         |
+|  * Real-Time IoT Sensor Telemetry     * Demurrage & Detention Risk Mitigation     |
+|  * Specialized Reefer Cold-Chain Mod  * Gemini AI Predictive Route Optimization   |
 +-----------------------------------------------------------------------------------+
 ```
 
