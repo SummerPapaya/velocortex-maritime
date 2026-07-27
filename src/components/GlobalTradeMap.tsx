@@ -232,28 +232,7 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
           {/* Background Oceanic Tint */}
           <rect x="0" y="0" width="1000" height="500" fill="url(#oceanGlow)" />
 
-          {/* Geographic Reference Lines (Equator & Tropics) */}
-          {showLabels && (
-            <g className="opacity-20 stroke-slate-500 stroke-1 stroke-dasharray-[4,4] text-[8px] font-mono fill-slate-400">
-              {/* Equator (Lat 0 -> y = 278.5) */}
-              <line x1="50" y1="278.5" x2="950" y2="278.5" />
-              <text x="55" y="275">EQUATOR (0°)</text>
-
-              {/* Tropic of Cancer (Lat 23.5 -> y = 211.4) */}
-              <line x1="50" y1="211.4" x2="950" y2="211.4" />
-              <text x="55" y="208">TROPIC OF CANCER (23.5°N)</text>
-
-              {/* Tropic of Capricorn (Lat -23.5 -> y = 345.7) */}
-              <line x1="50" y1="345.7" x2="950" y2="345.7" />
-              <text x="55" y="342">TROPIC OF CAPRICORN (23.5°S)</text>
-
-              {/* Prime Meridian (Lng 0 -> x = 500) */}
-              <line x1="500" y1="50" x2="500" y2="450" />
-              <text x="504" y="62">PRIME MERIDIAN (0°)</text>
-            </g>
-          )}
-
-          {/* LAYER 1: HIGH-PRECISION WORLD LANDMASSES */}
+          {/* LAYER 1: HIGH-PRECISION WORLD LANDMASSES (Bottom Layer) */}
           <g className="transition-all duration-300">
             {WORLD_LANDMASSES.map((land) => {
               const pts = land.coordinates.map(([lat, lng]) => {
@@ -278,6 +257,27 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
               );
             })}
           </g>
+
+          {/* Geographic Reference Lines (Equator & Tropics) */}
+          {showLabels && (
+            <g className="opacity-20 stroke-slate-500 stroke-1 stroke-dasharray-[4,4] text-[8px] font-mono fill-slate-400">
+              {/* Equator (Lat 0 -> y = 278.5) */}
+              <line x1="50" y1="278.5" x2="950" y2="278.5" />
+              <text x="55" y="275">EQUATOR (0°)</text>
+
+              {/* Tropic of Cancer (Lat 23.5 -> y = 211.4) */}
+              <line x1="50" y1="211.4" x2="950" y2="211.4" />
+              <text x="55" y="208">TROPIC OF CANCER (23.5°N)</text>
+
+              {/* Tropic of Capricorn (Lat -23.5 -> y = 345.7) */}
+              <line x1="50" y1="345.7" x2="950" y2="345.7" />
+              <text x="55" y="342">TROPIC OF CAPRICORN (23.5°S)</text>
+
+              {/* Prime Meridian (Lng 0 -> x = 500) */}
+              <line x1="500" y1="50" x2="500" y2="450" />
+              <text x="504" y="62">PRIME MERIDIAN (0°)</text>
+            </g>
+          )}
 
           {/* LAYER 2: STRATEGIC WATER & REGION LABELS */}
           {showLabels && (

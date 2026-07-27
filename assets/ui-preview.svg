@@ -1,4 +1,14 @@
 <svg width="1000" height="620" viewBox="0 0 1000 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.65" />
+    </linearGradient>
+    <linearGradient id="landHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#1E293B" stop-opacity="0.08" />
+    </linearGradient>
+  </defs>
   <!-- Background & Window Frame -->
   <rect width="1000" height="620" rx="16" fill="#0B1120"/>
   <rect x="1" y="1" width="998" height="618" rx="15" stroke="#1E293B" stroke-width="2"/>
@@ -16,47 +26,86 @@
   <text x="500" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#94A3B8" text-anchor="middle">VeloCortex AI — Global Maritime &amp; Intermodal Command Center [v2.4 Live]</text>
   
   <!-- Top Bar Right Status Badges -->
-  <rect x="740" y="12" width="120" height="20" rx="10" fill="#064E3B" stroke="#059669" stroke-width="1"/>
-  <circle cx="752" cy="22" r="3.5" fill="#34D399"/>
-  <text x="763" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#A7F3D0">IRIDIUM SAT: ONLINE</text>
+  <rect x="735" y="12" width="125" height="20" rx="10" fill="#064E3B" stroke="#059669" stroke-width="1"/>
+  <circle cx="747" cy="22" r="3" fill="#34D399"/>
+  <text x="757" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="700" fill="#A7F3D0">IRIDIUM SAT: ONLINE</text>
   
-  <rect x="870" y="12" width="110" height="20" rx="10" fill="#312E81" stroke="#4F46E5" stroke-width="1"/>
-  <text x="925" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#E0E7FF" text-anchor="middle">✨ GEMINI 3.6 AI</text>
+  <rect x="868" y="12" width="115" height="20" rx="10" fill="#312E81" stroke="#4F46E5" stroke-width="1"/>
+  <text x="925" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="700" fill="#E0E7FF" text-anchor="middle">✨ GEMINI 3.6 AI</text>
 
   <!-- KPI RIBBON (4 Metric Cards) -->
   <!-- Card 1: Active Vessels -->
   <rect x="20" y="60" width="225" height="85" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
   <text x="36" y="85" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748B">ACTIVE VESSELS IN TRANSIT</text>
   <text x="36" y="122" font-family="system-ui, sans-serif" font-size="28" font-weight="800" fill="#F8FAFC">142</text>
-  <rect x="155" y="102" width="74" height="22" rx="11" fill="#064E3B"/>
-  <text x="192" y="117" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#34D399" text-anchor="middle">▲ 98.4% On-time</text>
+  <rect x="145" y="102" width="86" height="22" rx="11" fill="#064E3B"/>
+  <text x="188" y="117" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#34D399" text-anchor="middle">▲ 98.4% On-time</text>
   <path d="M215 75 L225 75 L220 67 Z" fill="#3B82F6" opacity="0.3"/>
 
   <!-- Card 2: Tracked Containers -->
   <rect x="260" y="60" width="225" height="85" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
   <text x="276" y="85" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748B">MONITORED CONTAINERS</text>
   <text x="276" y="122" font-family="system-ui, sans-serif" font-size="28" font-weight="800" fill="#38BDF8">18,450</text>
-  <rect x="395" y="102" width="74" height="22" rx="11" fill="#0369A1" opacity="0.4"/>
-  <text x="432" y="117" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#7DD3FC" text-anchor="middle">🛰️ 1,420 Hz IoT</text>
+  <rect x="385" y="102" width="86" height="22" rx="11" fill="#0369A1" opacity="0.4"/>
+  <text x="428" y="117" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#7DD3FC" text-anchor="middle">🛰️ 1,420 Hz IoT</text>
 
   <!-- Card 3: Cold-Chain Reefers -->
   <rect x="500" y="60" width="225" height="85" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
   <text x="516" y="85" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748B">REEFER COLD-CHAIN MODULE</text>
   <text x="516" y="122" font-family="system-ui, sans-serif" font-size="28" font-weight="800" fill="#2DD4BF">-21.5°C</text>
-  <rect x="635" y="102" width="74" height="22" rx="11" fill="#134E4A"/>
-  <text x="672" y="117" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#5EEAD4" text-anchor="middle">❄️ 0 Excursions</text>
+  <rect x="625" y="102" width="86" height="22" rx="11" fill="#134E4A"/>
+  <text x="668" y="117" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#5EEAD4" text-anchor="middle">❄️ 0 Excursions</text>
 
   <!-- Card 4: Demurrage Risk Saved -->
   <rect x="740" y="60" width="240" height="85" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
   <text x="756" y="85" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748B">DEMURRAGE RISK SAVINGS</text>
   <text x="756" y="122" font-family="system-ui, sans-serif" font-size="28" font-weight="800" fill="#FACC15">$142.5K</text>
-  <rect x="880" y="102" width="84" height="22" rx="11" fill="#713F12" opacity="0.6"/>
-  <text x="922" y="117" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FEF08A" text-anchor="middle">⚡ 3 Diversions</text>
+  <rect x="875" y="102" width="90" height="22" rx="11" fill="#713F12" opacity="0.6"/>
+  <text x="920" y="117" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#FEF08A" text-anchor="middle">⚡ 3 Diversions</text>
 
   <!-- MAIN DASHBOARD CONTENT AREA -->
   <!-- Left Side: Global Interactive Maritime Map (580px wide) -->
   <rect x="20" y="160" width="580" height="435" rx="12" fill="#090E17" stroke="#1E293B" stroke-width="1"/>
   
+  <!-- Detailed Accurate Landmass Silhouettes (Bottom Layer of Map) -->
+  <!-- North America -->
+  <polygon points="105.7,222.9 148.1,210.9 190.5,222.9 206.4,246.9 217,270.9 209.6,282.9 196.9,294.9 195.8,306.9 190.5,323.7 182,318.9 172.5,328.5 183.1,340.5 187.3,352.5 190.5,369.3 187.3,371.7 171.4,352.5 158.7,335.7 151.3,314.1 148.1,309.3 143.8,275.7 129,251.7 118.4,246.9 97.2,232.5" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <text x="155" y="260" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">NORTH AMERICA</text>
+  <!-- South America -->
+  <polygon points="191.6,369.3 197.9,364.5 209.6,366.9 221.3,378.9 235,398.1 238.2,410.1 235,422.1 229.7,446.1 214.9,474.9 209.6,486.9 204.3,522.9 196.9,518.1 195.8,498.9 200,470.1 201.1,438.9 193.7,419.7 189.4,400.5 193.7,381.3" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <text x="210" y="440" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">SOUTH AMERICA</text>
+  <!-- Europe -->
+  <polygon points="270,278.4 265.8,271.2 274.3,259.1 271.1,249.4 277.5,242.2 284.4,237.3 287.9,227.7 281,215.6 296.4,201.1 315.2,193.9 340.8,205.9 323.7,220.4 306.6,232.5 296.4,234.9 323.7,256.7 322,266.3 316.9,268.7 313.5,273.6 299.8,273.6 287.9,259.1 281,261.5 275.3,268.7" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <text x="305" y="220" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">EUROPE</text>
+  <!-- British Isles -->
+  <polygon points="270,244.6 264.7,239.8 266.9,232.5 269,225.3 272.2,225.3 275.3,234.9 276.4,242.2" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Africa -->
+  <polygon points="269,280.8 264.7,292.9 257.3,317 257.3,329.1 264.7,353.3 286.1,355.7 293,377.4 293,401.6 296.4,418.5 303.2,447.4 316.9,447.4 325.4,437.8 340.8,401.6 339.1,377.4 349.3,360.5 359.6,338.8 345.9,336.4 335.7,317 328.8,297.7 327.1,290.5 306.6,288.1 289.6,276" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <text x="310" y="375" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">AFRICA</text>
+  <!-- Arabian Peninsula & Middle East -->
+  <polygon points="328.8,292.9 332.3,297.7 340.8,317 345.9,333.9 349.3,333.9 364.7,324.3 375,312.2 368.1,302.5 359.6,307.4 354.5,295.3 334,283.2" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Asia Mainland -->
+  <polygon points="344.2,266.3 361.3,256.7 357.9,244.6 375,220.4 392,196.3 511.6,191.5 554.3,220.4 538.9,239.8 496.2,263.9 491.1,273.6 492.8,280.8 479.1,290.5 467.2,312.2 460.4,317 455.2,341.2 448.4,346 449.8,362.2 443.3,350.8 434.7,326.7 424.5,312.2 412.5,326.7 407.4,341.2 404,346 397.2,329.1 390.3,312.2 375,305 363,278.4" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <text x="445" y="260" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">ASIA / PACIFIC</text>
+  <!-- Japan -->
+  <polygon points="494.5,290.5 503.1,280.8 511.6,266.3 518.4,259.1 511.6,268.7 508.2,280.8 499.6,285.6" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Taiwan & Philippines -->
+  <polygon points="479.1,305 477.4,312.2 477.4,321.9 480.9,331.5 487.7,346 486,350.8 474,346 477.4,331.5" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Indonesia & Southeast Asia Islands -->
+  <polygon points="434.7,353.3 443.3,365.3 451.8,379.8 467.2,384.7 477.4,384.7 484.3,389.5 511.6,370.2 523.6,384.7 496.2,367.8 474,362.9 472.3,348.4 439.9,358.1" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Australia -->
+  <polygon points="494.5,394.3 515,394.3 521.8,408.8 533.8,433 528.7,454.7 520.1,457.1 504.8,449.9 501.3,445 474,449.9 468.9,442.6 467.2,418.5 484.3,401.6" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <text x="505" y="430" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">AUSTRALIA</text>
+  <!-- New Zealand -->
+  <polygon points="569.7,449.9 576.5,457.1 561.1,476.4 557.7,474 566.3,464.4 571.4,454.7" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Madagascar -->
+  <polygon points="356.2,394.3 357.9,404 352.8,425.7 345.9,420.9 347.6,404" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Greenland & Iceland -->
+  <polygon points="228.7,246.9 235,234.9 254.1,184.2 238.2,198.9 201.1,206.1 220.2,227.7 252,210.8 260.5,205.9" fill="url(#landGrad)" stroke="#475569" stroke-width="0.8"/>
+  <!-- Antarctic Southern Rim (Grounds the bottom of the map above telemetry bar) -->
+  <path d="M20 526 Q100 520 200 524 T380 522 T580 525 L580 534 L20 534 Z" fill="url(#landGrad)" stroke="#475569" stroke-width="0.7" opacity="0.65"/>
+  <text x="300" y="532" font-family="system-ui, sans-serif" font-size="8" font-weight="700" fill="#475569" letter-spacing="1.5" text-anchor="middle">ANTARCTIC SOUTHERN OCEAN CORRIDOR</text>
+
   <!-- Map Grid Lines -->
   <line x1="20" y1="230" x2="600" y2="230" stroke="#1E293B" stroke-width="0.5" stroke-dasharray="4 4"/>
   <line x1="20" y1="300" x2="600" y2="300" stroke="#1E293B" stroke-width="0.5" stroke-dasharray="4 4"/>
@@ -71,19 +120,6 @@
   <text x="40" y="190" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#F8FAFC">🌐 LIVE MARITIME TELEMETRY &amp; ROUTE BOTTLENECK MAP</text>
   <text x="40" y="210" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#64748B">Real-time GPS/Iridium satellite positioning • Global oceanic corridors</text>
 
-  <!-- Stylized Landmass Silhouettes (Simplified SVG polygons) -->
-  <!-- North America / US West Coast -->
-  <path d="M40 220 L110 210 L140 240 L160 290 L130 350 L80 340 L50 280 Z" fill="#1E293B" opacity="0.4"/>
-  <text x="90" y="280" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#475569" text-anchor="middle">NORTH AMERICA</text>
-  
-  <!-- Europe -->
-  <path d="M260 190 L330 180 L350 220 L310 260 L270 250 Z" fill="#1E293B" opacity="0.4"/>
-  <text x="305" y="225" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#475569" text-anchor="middle">EUROPE</text>
-
-  <!-- Asia / Pacific -->
-  <path d="M440 210 L560 200 L580 280 L520 340 L460 310 Z" fill="#1E293B" opacity="0.4"/>
-  <text x="510" y="265" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#475569" text-anchor="middle">ASIA / PACIFIC</text>
-
   <!-- Major Port Nodes & Route Corridors -->
   <!-- Route 1: Transpacific (Shanghai -> LA) -->
   <path d="M480 290 Q320 380 150 310" stroke="#06B6D4" stroke-width="2.5" stroke-dasharray="6 4" fill="none"/>
@@ -91,37 +127,44 @@
   <path d="M280 240 Q200 290 150 310" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
   <!-- Route 3: Asia-Europe via Indian Ocean/Suez -->
   <path d="M480 290 Q380 420 280 240" stroke="#10B981" stroke-width="2" fill="none"/>
+  <!-- Route 4: Cape of Good Hope Southern Corridor (Asia -> South Atlantic) -->
+  <path d="M480 340 Q400 470 320 480 Q250 490 180 440" stroke="#F59E0B" stroke-width="1.8" stroke-dasharray="5 4" fill="none"/>
 
   <!-- Port Node 1: Shanghai / Ningbo Hub -->
   <circle cx="480" cy="290" r="8" fill="#06B6D4" fill-opacity="0.2"/>
   <circle cx="480" cy="290" r="4" fill="#06B6D4"/>
-  <rect x="492" y="278" width="85" height="24" rx="4" fill="#0F172A" stroke="#06B6D4" stroke-width="1"/>
-  <text x="498" y="294" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#E0F2FE">Shanghai Hub 🟢</text>
+  <rect x="492" y="278" width="88" height="24" rx="4" fill="#0F172A" stroke="#06B6D4" stroke-width="1"/>
+  <text x="498" y="294" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#E0F2FE">Shanghai Hub 🟢</text>
 
   <!-- Port Node 2: Los Angeles / Long Beach -->
   <circle cx="150" cy="310" r="8" fill="#3B82F6" fill-opacity="0.2"/>
   <circle cx="150" cy="310" r="4" fill="#3B82F6"/>
-  <rect x="55" y="298" width="85" height="24" rx="4" fill="#0F172A" stroke="#3B82F6" stroke-width="1"/>
-  <text x="63" y="314" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#DBEAFE">Los Angeles 🔵</text>
+  <rect x="52" y="298" width="88" height="24" rx="4" fill="#0F172A" stroke="#3B82F6" stroke-width="1"/>
+  <text x="58" y="314" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#DBEAFE">Los Angeles 🔵</text>
 
   <!-- Port Node 3: Rotterdam (Congestion Alert!) -->
   <circle cx="280" cy="240" r="12" fill="#EF4444" fill-opacity="0.3">
     <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"/>
   </circle>
   <circle cx="280" cy="240" r="5" fill="#EF4444"/>
-  <rect x="180" y="215" width="92" height="24" rx="4" fill="#450A0A" stroke="#EF4444" stroke-width="1"/>
-  <text x="186" y="231" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#FCA5A5">⚠️ Rotterdam (1.8d)</text>
+  <rect x="178" y="215" width="96" height="24" rx="4" fill="#450A0A" stroke="#EF4444" stroke-width="1"/>
+  <text x="184" y="231" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#FCA5A5">⚠️ Rotterdam (1.8d)</text>
 
   <!-- Active Vessel Dots & Floating Labels -->
   <!-- Vessel 1 -->
   <circle cx="340" cy="355" r="5" fill="#10B981"/>
-  <rect x="350" y="343" width="135" height="26" rx="4" fill="#0F172A" stroke="#10B981" stroke-width="1" opacity="0.9"/>
-  <text x="358" y="359" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#6EE7B7">🚢 MSC Marco Polo (18 kn)</text>
+  <rect x="348" y="343" width="140" height="24" rx="4" fill="#0F172A" stroke="#10B981" stroke-width="1" opacity="0.9"/>
+  <text x="356" y="359" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#6EE7B7">🚢 MSC Marco Polo (18 kn)</text>
 
   <!-- Vessel 2 (Reefer Cold-Chain) -->
   <circle cx="310" cy="340" r="5" fill="#2DD4BF"/>
-  <rect x="200" y="355" width="130" height="26" rx="4" fill="#0F172A" stroke="#2DD4BF" stroke-width="1" opacity="0.9"/>
-  <text x="208" y="371" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#5EEAD4">❄️ MSCU-7829 (-22.0°C)</text>
+  <rect x="202" y="355" width="136" height="24" rx="4" fill="#0F172A" stroke="#2DD4BF" stroke-width="1" opacity="0.9"/>
+  <text x="210" y="371" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#5EEAD4">❄️ MSCU-7829 (-22.0°C)</text>
+
+  <!-- Vessel 3 (Southern Corridor) -->
+  <circle cx="390" cy="455" r="5" fill="#F59E0B"/>
+  <rect x="398" y="443" width="138" height="24" rx="4" fill="#0F172A" stroke="#F59E0B" stroke-width="1" opacity="0.9"/>
+  <text x="406" y="459" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#FDE68A">🚢 COSCO Star (19.2 kn)</text>
 
   <!-- Bottom Left Map Telemetry Bar -->
   <rect x="36" y="535" width="548" height="42" rx="8" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
@@ -129,7 +172,7 @@
   <text x="68" y="559" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#94A3B8">Zero-Trust Telemetry Feed:</text>
   <text x="220" y="559" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#F8FAFC">1,420 Hz Ingestion Rate • AES-256 mTLS Ledger Verified</text>
   <rect x="470" y="545" width="98" height="22" rx="4" fill="#1E293B"/>
-  <text x="519" y="560" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#38BDF8" text-anchor="middle">📡 SLA: 99.99%</text>
+  <text x="519" y="560" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#38BDF8" text-anchor="middle">📡 SLA: 99.99%</text>
 
 
   <!-- RIGHT SIDE: AI ADVISOR & ACTIVE CONTAINER STREAM (380px wide) -->
@@ -137,12 +180,12 @@
   <rect x="615" y="160" width="365" height="230" rx="12" fill="#0F172A" stroke="#4F46E5" stroke-width="1.5"/>
   <path d="M615 172 C615 165.373 620.373 160 627 160 H968 C974.627 160 980 165.373 980 172 V200 H615 V172 Z" fill="#1E1B4B"/>
   <text x="635" y="185" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#C7D2FE">✨ GEMINI 3.6-FLASH PREDICTIVE ADVISOR</text>
-  <rect x="885" y="171" width="80" height="20" rx="10" fill="#4338CA"/>
-  <text x="925" y="185" font-family="system-ui, sans-serif" font-size="10" font-weight="700" fill="#E0E7FF" text-anchor="middle">AI ACTIVE</text>
+  <rect x="890" y="171" width="75" height="20" rx="10" fill="#4338CA"/>
+  <text x="927" y="185" font-family="system-ui, sans-serif" font-size="9.5" font-weight="700" fill="#E0E7FF" text-anchor="middle">AI ACTIVE</text>
   
   <!-- AI Content Box -->
   <rect x="630" y="212" width="335" height="34" rx="6" fill="#450A0A" stroke="#DC2626" stroke-width="1"/>
-  <text x="642" y="234" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FCA5A5">🚨 BOTTLENECK DETECTED: Rotterdam Terminal (+42h Dwell)</text>
+  <text x="636" y="234" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#FCA5A5">🚨 BOTTLENECK DETECTED: Rotterdam Terminal (+42h Dwell)</text>
   
   <text x="630" y="268" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#E2E8F0">AI Recommendation Summary:</text>
   <text x="630" y="288" font-family="system-ui, sans-serif" font-size="11" font-weight="400" fill="#94A3B8">Vessel &quot;CMA CGM Marco Polo&quot; inbound to Rotterdam</text>
@@ -151,7 +194,7 @@
 
   <!-- AI Action Button -->
   <rect x="630" y="342" width="335" height="32" rx="6" fill="#4F46E5"/>
-  <text x="797" y="362" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">⚡ Execute Automated Route Diversion &amp; Notify Terminal</text>
+  <text x="797" y="362" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">⚡ Execute Automated Route Diversion &amp; Notify Terminal</text>
 
 
   <!-- Bottom Right Card: Active Container Telemetry Feed -->
@@ -166,14 +209,14 @@
 
   <!-- Telemetry Pills -->
   <rect x="630" y="520" width="105" height="56" rx="6" fill="#064E3B" fill-opacity="0.3" stroke="#059669" stroke-width="1"/>
-  <text x="682" y="540" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#6EE7B7" text-anchor="middle">TEMP / RH</text>
-  <text x="682" y="563" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#34D399" text-anchor="middle">-22.1°C / 45%</text>
+  <text x="682" y="540" font-family="system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#6EE7B7" text-anchor="middle">TEMP / RH</text>
+  <text x="682" y="563" font-family="system-ui, sans-serif" font-size="12.5" font-weight="800" fill="#34D399" text-anchor="middle">-22.1°C / 45%</text>
 
   <rect x="745" y="520" width="105" height="56" rx="6" fill="#0369A1" fill-opacity="0.3" stroke="#0284C7" stroke-width="1"/>
-  <text x="797" y="540" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#7DD3FC" text-anchor="middle">DOOR SEAL</text>
-  <text x="797" y="563" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#38BDF8" text-anchor="middle">🔒 LOCKED</text>
+  <text x="797" y="540" font-family="system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#7DD3FC" text-anchor="middle">DOOR SEAL</text>
+  <text x="797" y="563" font-family="system-ui, sans-serif" font-size="12.5" font-weight="800" fill="#38BDF8" text-anchor="middle">🔒 LOCKED</text>
 
   <rect x="860" y="520" width="105" height="56" rx="6" fill="#4338CA" fill-opacity="0.3" stroke="#4F46E5" stroke-width="1"/>
-  <text x="912" y="540" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#C7D2FE" text-anchor="middle">SHOCK LOG</text>
-  <text x="912" y="563" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#818CF8" text-anchor="middle">0.02G (Safe)</text>
+  <text x="912" y="540" font-family="system-ui, sans-serif" font-size="9.5" font-weight="600" fill="#C7D2FE" text-anchor="middle">SHOCK LOG</text>
+  <text x="912" y="563" font-family="system-ui, sans-serif" font-size="12.5" font-weight="800" fill="#818CF8" text-anchor="middle">0.02G (Safe)</text>
 </svg>
