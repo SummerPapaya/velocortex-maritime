@@ -11,7 +11,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 
 <p align="center">
-  [🇺🇸 English](README.md) | <b>[🇨🇳 简体中文](README_zh.md)</b>
+  🌐 <a href="README.md">🇺🇸 English (英文)</a> | <b><a href="README_zh.md">🇨🇳 简体中文</a></b>
 </p>
 
 <p align="center">
@@ -172,9 +172,10 @@ npm run start
 
 ## 🌐 双语国际化
 
-在界面右上角一键无缝切换语言，状态不丢失、数据不停服：
-* 🇨🇳 **简体中文 (Simplified Chinese)：** 针对中国及亚太地区港口码头、货代调度团队、船东轮机长及冷链管理专家定制。
-* 🇺🇸 **英文 (English)：** 符合海事物流与航运管理体系的国际标准业务专业词汇。
+在界面右上角一键无缝切换语言（状态不丢失、数据不停服），或者无缝查阅不同语言版本的项目说明文档：
+* 📖 **项目文档：** 查阅本说明文档的 **[🇺🇸 英文版本 (English)](README.md)** 或 **[🇨🇳 中文版本 (Simplified Chinese)](README_zh.md)**。
+* 🇨🇳 **简体中文界面：** 针对中国及亚太地区港口码头、货代调度团队、船东轮机长及冷链管理专家定制。
+* 🇺🇸 **英文界面 (English)：** 符合海事物流与航运管理体系的国际标准业务专业词汇。
 
 ---
 

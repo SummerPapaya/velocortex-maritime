@@ -11,7 +11,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 
 <p align="center">
-  <b>[🇺🇸 English](README.md)</b> | [🇨🇳 简体中文](README_zh.md)
+  🌐 <b><a href="README.md">🇺🇸 English</a></b> | <a href="README_zh.md">🇨🇳 简体中文 (Chinese)</a>
 </p>
 
 <p align="center">
@@ -172,9 +172,10 @@ The build command outputs static UI assets to `dist/` and compiles `server.ts` i
 
 ## 🌐 Bilingual Localization
 
-Switch languages dynamically without reloading or losing state:
-* 🇺🇸 **English:** Standard international logistics maritime terminology.
-* 🇨🇳 **中文 (Simplified Chinese):** Optimized for transpacific freight forwarders, terminal operators, and port authorities (港口拥堵, 冷链监控, 滞箱费风险预测).
+Switch languages dynamically in the application without reloading or losing state, or switch between our documentation languages:
+* 📖 **Documentation:** Read this guide in **[🇨🇳 简体中文 (Simplified Chinese)](README_zh.md)** or **[🇺🇸 English](README.md)**.
+* 🇺🇸 **English App Interface:** Standard international logistics maritime terminology.
+* 🇨🇳 **中文 App Interface (Simplified Chinese):** Optimized for transpacific freight forwarders, terminal operators, and port authorities (港口拥堵, 冷链监控, 滞箱费风险预测).
 
 ---
 
