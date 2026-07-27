@@ -27,6 +27,10 @@
 
 ## 🌟 Overview
 
+<p align="center">
+  <img src="assets/ui-preview.svg" alt="VeloCortex AI Command Center UI Preview" width="100%" />
+</p>
+
 In modern global maritime logistics and intermodal supply chains, end-to-end real-time visibility is essential. Unforeseen terminal congestion, port bottleneck delays, container demurrage risks, or environmental deviations (such as temperature fluctuations in perishable cargo) can disrupt operations and cause substantial financial losses.
 
 **VeloCortex AI** bridges the visibility gap across global shipping lanes and major oceanic corridors. By integrating **real-time Iridium satellite telemetry**, **interactive maritime mapping**, and **Google Gemini AI predictive analytics**, VeloCortex delivers comprehensive track-and-trace capabilities for cargo vessels, standard containers, and specialized reefers—transforming raw data streams into actionable supply chain intelligence.
