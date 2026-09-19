@@ -90,22 +90,22 @@ export function getContainerOwnerByPrefix(identifier: string): { ownerEn: string
 
 export function generateETA(status: string, index: number, lang: "en" | "zh"): string {
   if (status === "DELIVERED") {
-    return lang === "zh" ? "已于 2026-07-26 抵达并完成放行" : "Arrived & Cleared 2026-07-26";
+    return lang === "zh" ? "已于 2026-09-18 抵达并完成放行" : "Arrived & Cleared 2026-09-18";
   }
   if (status === "BERTHED") {
     return lang === "zh" ? "今日靠泊 预计完成卸货 +12小时" : "Berthed Today • Discharge in +12 hrs";
   }
   if (status === "PORT_CONGESTION") {
-    return lang === "zh" ? "预计 2026-08-01 (因泊位排队顺延+48小时)" : "Est. 2026-08-01 (+48h Berth Delay)";
+    return lang === "zh" ? "预计 2026-09-24 (因泊位排队顺延+48小时)" : "Est. 2026-09-24 (+48h Berth Delay)";
   }
   if (status === "TEMP_EXCURSION") {
-    return lang === "zh" ? "预计 2026-07-30 (紧急温控干预中)" : "Est. 2026-07-30 (Active Temp Intervention)";
+    return lang === "zh" ? "预计 2026-09-22 (紧急温控干预中)" : "Est. 2026-09-22 (Active Temp Intervention)";
   }
 
-  // Calculate future dates based on index
-  const baseDay = 28 + (index % 6);
-  const month = baseDay > 31 ? "08" : "07";
-  const day = baseDay > 31 ? (baseDay - 31).toString().padStart(2, "0") : baseDay.toString().padStart(2, "0");
+  // Calculate future dates based on index starting from current date (September 20-29, 2026)
+  const baseDay = 20 + (index % 10);
+  const month = baseDay > 30 ? "10" : "09";
+  const day = baseDay > 30 ? (baseDay - 30).toString().padStart(2, "0") : baseDay.toString().padStart(2, "0");
   const time = `${10 + (index % 8)}:00 UTC`;
 
   return lang === "zh" ? `预计 2026-${month}-${day} ${time}` : `Est. 2026-${month}-${day} ${time}`;

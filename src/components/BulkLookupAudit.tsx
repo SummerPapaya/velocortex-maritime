@@ -110,7 +110,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         id: "m1",
         title: `Gate-in & Customs Export Clearance`,
         location: `${origCity} Marine Terminal`,
-        timestamp: "2026-07-20 08:30 UTC",
+        timestamp: "2026-09-12 08:30 UTC",
         status: "COMPLETED",
         details: "Container sealed, verified by automated gantry OCR, and cleared for export."
       },
@@ -118,7 +118,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         id: "m2",
         title: `Vessel Loading & Departure`,
         location: `${origCity} Berth 4`,
-        timestamp: "2026-07-21 14:15 UTC",
+        timestamp: "2026-09-14 14:15 UTC",
         status: "COMPLETED",
         details: "Loaded onto carrier deck. AIS transponder satellite handshake confirmed."
       },
@@ -126,7 +126,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         id: "m3",
         title: `Mid-Ocean / Canal Transit Corridor`,
         location: "International Waters / Strategic Chokepoint",
-        timestamp: "2026-07-25 19:00 UTC",
+        timestamp: "2026-09-18 19:00 UTC",
         status: status === "TEMP_EXCURSION" ? "ALERT" : status === "PORT_CONGESTION" ? "ALERT" : "COMPLETED",
         details: status === "TEMP_EXCURSION" 
           ? "Thermal alert triggered (+4.2°C excursion). AI reefer compressor override initiated." 
@@ -138,7 +138,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         id: "m4",
         title: `Terminal Discharge & Customs Release`,
         location: `${destCity} Intermodal Rail Yard`,
-        timestamp: "Est. 2026-07-28 06:00 UTC",
+        timestamp: "Est. 2026-09-22 06:00 UTC",
         status: status === "DELIVERED" || status === "BERTHED" ? "COMPLETED" : "IN_PROGRESS",
         details: "Discharge gantry crane scheduling locked. Customs EDI release pre-approved."
       },
@@ -146,7 +146,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         id: "m5",
         title: `Final Inland DC Delivery`,
         location: `${destCity} Regional Distribution Center`,
-        timestamp: "Est. 2026-07-29 16:00 UTC",
+        timestamp: "Est. 2026-09-23 16:00 UTC",
         status: status === "DELIVERED" ? "COMPLETED" : "PENDING",
         details: "Final last-mile chassis handover and dock receipt signature."
       }

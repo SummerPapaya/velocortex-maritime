@@ -51,12 +51,12 @@ export const AlertsDashboard: React.FC<AlertsDashboardProps> = ({
   const totalCostSaved = 284500; // Simulated historical savings
 
   const savingsChartData = [
-    { month: isZh ? "2月" : "Feb", demurrageSaved: 32000, spoilageAvoided: 14000 },
-    { month: isZh ? "3月" : "Mar", demurrageSaved: 41000, spoilageAvoided: 19000 },
     { month: isZh ? "4月" : "Apr", demurrageSaved: 38000, spoilageAvoided: 22000 },
     { month: isZh ? "5月" : "May", demurrageSaved: 54000, spoilageAvoided: 31000 },
     { month: isZh ? "6月" : "Jun", demurrageSaved: 49000, spoilageAvoided: 28000 },
     { month: isZh ? "7月" : "Jul", demurrageSaved: 62000, spoilageAvoided: 45000 },
+    { month: isZh ? "8月" : "Aug", demurrageSaved: 68000, spoilageAvoided: 52000 },
+    { month: isZh ? "9月" : "Sep", demurrageSaved: 74000, spoilageAvoided: 58000 },
   ];
 
   const translateAlertType = (type: string) => {

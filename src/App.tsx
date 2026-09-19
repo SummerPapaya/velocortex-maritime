@@ -810,7 +810,7 @@ export default function App() {
             <button onClick={() => setActiveTab("heatmap")} className="hover:text-blue-500 transition-colors">
               Route Heatmaps
             </button>
-            <span>v2.4 (Build 2026.07)</span>
+            <span>v2.5 (Update 2026.09)</span>
           </div>
         </div>
       </footer>

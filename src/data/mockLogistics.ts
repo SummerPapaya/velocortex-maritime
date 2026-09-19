@@ -21,8 +21,8 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
     status: "TEMP_EXCURSION",
     priority: "CRITICAL",
     cargoType: "Reefer (mRNA Vaccines & Bio-Pharma)",
-    eta: "2026-08-01T14:30:00Z",
-    revisedEta: "2026-08-02T08:15:00Z",
+    eta: "2026-09-24T14:30:00Z",
+    revisedEta: "2026-09-25T08:15:00Z",
     coordinates: { lat: 28.5, lng: 168.2 },
     progressPercent: 55,
     routeId: "trans_pacific",
@@ -45,11 +45,11 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       ]
     },
     milestones: [
-      { id: "m1", title: "Gate-In & Reefer Plug Connect", location: "CNSHA Yangshan Terminal", timestamp: "2026-07-20 08:30", status: "COMPLETED", details: "Verified setpoint -20.0°C. Customs export declaration cleared.", txHash: "0x8f9a2b4e...91c" },
-      { id: "m2", title: "Loaded onto Vessel MSC Gulsun", location: "Berth 4, Yangshan", timestamp: "2026-07-21 16:45", status: "COMPLETED", details: "Stowed in Bay 14, Tier 82. IoT telemetry active.", txHash: "0x3a7c819d...4f2" },
-      { id: "m3", title: "Mid-Pacific Transit Telemetry Anomaly", location: "Lat 28.5°N, Lng 168.2°E", timestamp: "2026-07-26 21:10", status: "ALERT", details: "Compressor defrost cycle extended. Temp rose above -18°C threshold.", txHash: "0x6e2b110a...8d1" },
-      { id: "m4", title: "Approaching USLAX Outer Harbor", location: "Los Angeles Pilot Area", timestamp: "Est. 2026-08-01", status: "PENDING", details: "Priority health clearance requested to minimize runway demurrage.", txHash: "Pending" },
-      { id: "m5", title: "Final Cold-Chain Drayage Delivery", location: "McKesson Distribution Hub, CA", timestamp: "Est. 2026-08-02", status: "PENDING", details: "Scheduled direct transfer to active refrigerated trailer.", txHash: "Pending" }
+      { id: "m1", title: "Gate-In & Reefer Plug Connect", location: "CNSHA Yangshan Terminal", timestamp: "2026-09-12 08:30", status: "COMPLETED", details: "Verified setpoint -20.0°C. Customs export declaration cleared.", txHash: "0x8f9a2b4e...91c" },
+      { id: "m2", title: "Loaded onto Vessel MSC Gulsun", location: "Berth 4, Yangshan", timestamp: "2026-09-13 16:45", status: "COMPLETED", details: "Stowed in Bay 14, Tier 82. IoT telemetry active.", txHash: "0x3a7c819d...4f2" },
+      { id: "m3", title: "Mid-Pacific Transit Telemetry Anomaly", location: "Lat 28.5°N, Lng 168.2°E", timestamp: "2026-09-19 09:10", status: "ALERT", details: "Compressor defrost cycle extended. Temp rose above -18°C threshold.", txHash: "0x6e2b110a...8d1" },
+      { id: "m4", title: "Approaching USLAX Outer Harbor", location: "Los Angeles Pilot Area", timestamp: "Est. 2026-09-24", status: "PENDING", details: "Priority health clearance requested to minimize runway demurrage.", txHash: "Pending" },
+      { id: "m5", title: "Final Cold-Chain Drayage Delivery", location: "McKesson Distribution Hub, CA", timestamp: "Est. 2026-09-25", status: "PENDING", details: "Scheduled direct transfer to active refrigerated trailer.", txHash: "Pending" }
     ],
     aiAnalytics: {
       demurrageRiskUsd: 14500,
@@ -77,8 +77,8 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
     status: "PORT_CONGESTION",
     priority: "HIGH",
     cargoType: "Dry Cargo (High-End GPU Servers & AI Chips)",
-    eta: "2026-08-08T10:00:00Z",
-    revisedEta: "2026-08-11T18:00:00Z",
+    eta: "2026-09-30T10:00:00Z",
+    revisedEta: "2026-10-04T18:00:00Z",
     coordinates: { lat: 14.2, lng: 43.1 }, // Red Sea / Bab el-Mandeb approach
     progressPercent: 42,
     routeId: "asia_europe",
@@ -101,11 +101,11 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       ]
     },
     milestones: [
-      { id: "m21", title: "Factory Departure & High-Security Seal", location: "Ningbo Tech Park", timestamp: "2026-07-12 11:00", status: "COMPLETED", details: "RFID electronic bolt seal #SEAL-9981 attached.", txHash: "0x71a2c90f...33e" },
-      { id: "m22", title: "Loaded onto Vessel Madrid Maersk", location: "Beilun Terminal", timestamp: "2026-07-14 09:20", status: "COMPLETED", details: "Underdeck stowage to minimize temperature variance.", txHash: "0x12b4e88a...901" },
-      { id: "m23", title: "Bab el-Mandeb / Red Sea Traffic Queue", location: "Lat 14.2°N, Lng 43.1°E", timestamp: "2026-07-26 14:00", status: "ALERT", details: "Navigational convoy queue causing 72-hour transit slippage.", txHash: "0x55d1a09b...41c" },
-      { id: "m24", title: "Suez Canal Northbound Transit", location: "Port Said", timestamp: "Est. 2026-07-31", status: "PENDING", details: "Convoy slot confirmed. Pilotage scheduled.", txHash: "Pending" },
-      { id: "m25", title: "Discharge at Maasvlakte 2 Automated Terminal", location: "Rotterdam, NL", timestamp: "Est. 2026-08-11", status: "PENDING", details: "Automated AGV routing to customs bonded warehouse.", txHash: "Pending" }
+      { id: "m21", title: "Factory Departure & High-Security Seal", location: "Ningbo Tech Park", timestamp: "2026-08-25 11:00", status: "COMPLETED", details: "RFID electronic bolt seal #SEAL-9981 attached.", txHash: "0x71a2c90f...33e" },
+      { id: "m22", title: "Loaded onto Vessel Madrid Maersk", location: "Beilun Terminal", timestamp: "2026-08-28 09:20", status: "COMPLETED", details: "Underdeck stowage to minimize temperature variance.", txHash: "0x12b4e88a...901" },
+      { id: "m23", title: "Bab el-Mandeb / Red Sea Traffic Queue", location: "Lat 14.2°N, Lng 43.1°E", timestamp: "2026-09-19 08:00", status: "ALERT", details: "Navigational convoy queue causing 72-hour transit slippage.", txHash: "0x55d1a09b...41c" },
+      { id: "m24", title: "Suez Canal Northbound Transit", location: "Port Said", timestamp: "Est. 2026-09-24", status: "PENDING", details: "Convoy slot confirmed. Pilotage scheduled.", txHash: "Pending" },
+      { id: "m25", title: "Discharge at Maasvlakte 2 Automated Terminal", location: "Rotterdam, NL", timestamp: "Est. 2026-10-04", status: "PENDING", details: "Automated AGV routing to customs bonded warehouse.", txHash: "Pending" }
     ],
     aiAnalytics: {
       demurrageRiskUsd: 8200,
@@ -113,7 +113,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       recommendation: "Due to 72-hour canal convoy backlog, ETA at Rotterdam is delayed. Recommend changing final delivery mode from barge to direct freight train to meet European data center launch schedule.",
       actionItems: [
         "Request carrier destination diversion from Rhine barge to Betuweroute express rail.",
-        "Notify receiver tech team of revised arrival date August 11.",
+        "Notify receiver tech team of revised arrival date October 4.",
         "Verify electronic bolt seal integrity via satellite telemetry."
       ]
     }
@@ -133,7 +133,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
     status: "IN_TRANSIT",
     priority: "STANDARD",
     cargoType: "Dry Cargo (Automotive Precision Parts & Sensors)",
-    eta: "2026-07-30T06:00:00Z",
+    eta: "2026-09-23T06:00:00Z",
     coordinates: { lat: 46.8, lng: -28.4 }, // Mid North Atlantic
     progressPercent: 78,
     routeId: "trans_atlantic",
@@ -156,10 +156,10 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       ]
     },
     milestones: [
-      { id: "m31", title: "Automated Rail Gate-In", location: "DEHAM CTA Hamburg", timestamp: "2026-07-18 14:10", status: "COMPLETED", details: "Optical OCR container scan passed. Zero damage reported.", txHash: "0x99a1b2c3...11a" },
-      { id: "m32", title: "Vessel Departure Hapag-Lloyd Berlin", location: "Elbe River Estuary", timestamp: "2026-07-19 22:30", status: "COMPLETED", details: "Sailing at 19.4 knots. Atlantic weather window favorable.", txHash: "0x44c8d10e...88f" },
-      { id: "m33", title: "Mid-Atlantic Telemetry Checkpoint", location: "Lat 46.8°N, Lng 28.4°W", timestamp: "2026-07-26 12:00", status: "IN_PROGRESS", details: "All environmental parameters nominal. ETA on schedule.", txHash: "0x22f1a09c...33b" },
-      { id: "m34", title: "Ambrose Channel Pilot Boarding", location: "New York Harbor", timestamp: "Est. 2026-07-30", status: "PENDING", details: "Tugboat escort and Maher Terminal crane slot reserved.", txHash: "Pending" }
+      { id: "m31", title: "Automated Rail Gate-In", location: "DEHAM CTA Hamburg", timestamp: "2026-09-11 14:10", status: "COMPLETED", details: "Optical OCR container scan passed. Zero damage reported.", txHash: "0x99a1b2c3...11a" },
+      { id: "m32", title: "Vessel Departure Hapag-Lloyd Berlin", location: "Elbe River Estuary", timestamp: "2026-09-12 22:30", status: "COMPLETED", details: "Sailing at 19.4 knots. Atlantic weather window favorable.", txHash: "0x44c8d10e...88f" },
+      { id: "m33", title: "Mid-Atlantic Telemetry Checkpoint", location: "Lat 46.8°N, Lng 28.4°W", timestamp: "2026-09-19 12:00", status: "IN_PROGRESS", details: "All environmental parameters nominal. ETA on schedule.", txHash: "0x22f1a09c...33b" },
+      { id: "m34", title: "Ambrose Channel Pilot Boarding", location: "New York Harbor", timestamp: "Est. 2026-09-23", status: "PENDING", details: "Tugboat escort and Maher Terminal crane slot reserved.", txHash: "Pending" }
     ],
     aiAnalytics: {
       demurrageRiskUsd: 0,
@@ -186,8 +186,8 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
     status: "CUSTOMS_HOLD",
     priority: "HIGH",
     cargoType: "Hazardous (Lithium-Ion Battery Modules)",
-    eta: "2026-08-04T16:00:00Z",
-    revisedEta: "2026-08-06T12:00:00Z",
+    eta: "2026-09-27T16:00:00Z",
+    revisedEta: "2026-09-29T12:00:00Z",
     coordinates: { lat: 9.1, lng: -79.7 }, // Approaching Panama Canal
     progressPercent: 68,
     routeId: "panama_canal",
@@ -210,11 +210,11 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       ]
     },
     milestones: [
-      { id: "m41", title: "Dangerous Goods (DG) Inspection & Loading", location: "SGSIN Singapore Terminal", timestamp: "2026-07-08 10:00", status: "COMPLETED", details: "IMO Class 9 hazardous certification verified. Thermal sensors calibrated.", txHash: "0x88e2c10a...77d" },
-      { id: "m42", title: "Pacific Ocean Crossing", location: "Equatorial Pacific", timestamp: "2026-07-20 18:00", status: "COMPLETED", details: "Two minor shock events recorded during oceanic swell (max 1.4G). Cargo secure.", txHash: "0x11d4e55b...22a" },
-      { id: "m43", title: "Panama Canal Anchorage & Customs Hold", location: "Colon Anchorage, Panama", timestamp: "2026-07-26 15:30", status: "ALERT", details: "Random CBP container security initiative (CSI) non-intrusive X-ray hold triggered.", txHash: "0x33b1f90c...88e" },
-      { id: "m44", title: "Panama Canal Gatun Locks Transit", location: "Gatun Locks", timestamp: "Est. 2026-07-29", status: "PENDING", details: "Awaiting release from CSI scan queue.", txHash: "Pending" },
-      { id: "m45", title: "Discharge & HAZMAT Drayage", location: "Garden City Terminal, GA", timestamp: "Est. 2026-08-06", status: "PENDING", details: "Escorted transport to battery assembly plant.", txHash: "Pending" }
+      { id: "m41", title: "Dangerous Goods (DG) Inspection & Loading", location: "SGSIN Singapore Terminal", timestamp: "2026-08-22 10:00", status: "COMPLETED", details: "IMO Class 9 hazardous certification verified. Thermal sensors calibrated.", txHash: "0x88e2c10a...77d" },
+      { id: "m42", title: "Pacific Ocean Crossing", location: "Equatorial Pacific", timestamp: "2026-09-08 18:00", status: "COMPLETED", details: "Two minor shock events recorded during oceanic swell (max 1.4G). Cargo secure.", txHash: "0x11d4e55b...22a" },
+      { id: "m43", title: "Panama Canal Anchorage & Customs Hold", location: "Colon Anchorage, Panama", timestamp: "2026-09-19 11:30", status: "ALERT", details: "Random CBP container security initiative (CSI) non-intrusive X-ray hold triggered.", txHash: "0x33b1f90c...88e" },
+      { id: "m44", title: "Panama Canal Gatun Locks Transit", location: "Gatun Locks", timestamp: "Est. 2026-09-22", status: "PENDING", details: "Awaiting release from CSI scan queue.", txHash: "Pending" },
+      { id: "m45", title: "Discharge & HAZMAT Drayage", location: "Garden City Terminal, GA", timestamp: "Est. 2026-09-29", status: "PENDING", details: "Escorted transport to battery assembly plant.", txHash: "Pending" }
     ],
     aiAnalytics: {
       demurrageRiskUsd: 6400,
@@ -223,7 +223,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       actionItems: [
         "Upload verified manufacturer SDS (Safety Data Sheet) to US Customs portal.",
         "Monitor container internal thermal sensors for any heat accumulation.",
-        "Reschedule Savannah terminal pickup slot from Aug 4 to Aug 6."
+        "Reschedule Savannah terminal pickup slot from Sep 27 to Sep 29."
       ]
     }
   },
@@ -242,7 +242,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
     status: "BERTHED",
     priority: "STANDARD",
     cargoType: "Reefer (Specialty Seafood & Wagyu Beef)",
-    eta: "2026-07-27T08:00:00Z",
+    eta: "2026-09-19T14:00:00Z",
     coordinates: { lat: 30.6, lng: 122.1 }, // Yangshan port
     progressPercent: 96,
     routeId: "intra_asia",
@@ -265,9 +265,9 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       ]
     },
     milestones: [
-      { id: "m51", title: "Cold Storage Gate-Out", location: "Busan Logistics Hub", timestamp: "2026-07-25 06:00", status: "COMPLETED", details: "Ultra-low temp reefer locked at -22.0°C.", txHash: "0x55f1e20a...99b" },
-      { id: "m52", title: "Yellow Sea Short-Sea Transit", location: "Yellow Sea", timestamp: "2026-07-26 14:00", status: "COMPLETED", details: "Smooth 24-hour crossing. Excellent satellite connectivity.", txHash: "0x77c2a11b...44f" },
-      { id: "m53", title: "Berth Arrival at Yangshan Terminal", location: "CNSHA Berth 12", timestamp: "2026-07-27 01:30", status: "IN_PROGRESS", details: "Vessel berthed. Gantry crane discharge commencing.", txHash: "0x88d1b30c...11e" }
+      { id: "m51", title: "Cold Storage Gate-Out", location: "Busan Logistics Hub", timestamp: "2026-09-18 06:00", status: "COMPLETED", details: "Ultra-low temp reefer locked at -22.0°C.", txHash: "0x55f1e20a...99b" },
+      { id: "m52", title: "Yellow Sea Short-Sea Transit", location: "Yellow Sea", timestamp: "2026-09-19 02:00", status: "COMPLETED", details: "Smooth 24-hour crossing. Excellent satellite connectivity.", txHash: "0x77c2a11b...44f" },
+      { id: "m53", title: "Berth Arrival at Yangshan Terminal", location: "CNSHA Berth 12", timestamp: "2026-09-19 12:30", status: "IN_PROGRESS", details: "Vessel berthed. Gantry crane discharge commencing.", txHash: "0x88d1b30c...11e" }
     ],
     aiAnalytics: {
       demurrageRiskUsd: 0,
