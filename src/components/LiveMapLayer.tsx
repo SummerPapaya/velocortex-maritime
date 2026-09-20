@@ -4,7 +4,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Globe2, ZoomIn, Maximize2, ShieldAlert } from "lucide-react";
+import { Globe2, ZoomIn, Maximize2, ShieldAlert, Info } from "lucide-react";
 import {
   WORLD_LAND_PATH,
   WORLD_VIEWBOX_W as VW,
@@ -216,6 +216,16 @@ export const LiveMapLayer: React.FC<Props> = ({
       ref={wrapRef}
       className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
     >
+      {tab === "vessels" && !zoomed && (
+        <div className="flex items-start gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-300/60 dark:border-amber-800/60">
+          <Info className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <p className="text-[11px] leading-relaxed text-amber-800 dark:text-amber-200">
+            {zh
+              ? "提示：开放 AIS 数据源仅覆盖波罗的海与芬兰湾，本视角（全球）仅用于定位。点击下方「聚焦覆盖区」即可回到真实船位视图。"
+              : "Note: the open AIS feed covers only the Baltic Sea & Gulf of Finland, so this world view is for orientation only. Click “Zoom to footprint” to return to the live positions."}
+          </p>
+        </div>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-slate-200/80 dark:border-slate-800">
         <div className="flex items-center gap-2 min-w-0">
           <Globe2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />

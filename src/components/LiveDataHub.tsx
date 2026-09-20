@@ -75,21 +75,16 @@ export const LiveDataHub: React.FC = () => {
 
   const activeHint = TABS.find((t) => t.id === tab);
 
+  const switchTab = useCallback((id: LiveTab) => {
+    setTab(id);
+    // The open AIS feed only covers the Baltic, so the vessel tab should open
+    // on the zoomed footprint rather than a near-empty world map.
+    if (id === "vessels") setZoomed(true);
+  }, []);
+
   return (
     <div className="space-y-4">
-      {/* Shared map layer */}
-      <LiveMapLayer
-        tab={tab}
-        lang={language}
-        chokepoints={chokepoints?.chokepoints ?? null}
-        ais={ais}
-        ports={ports}
-        focusGroup={focusGroup}
-        zoomed={zoomed}
-        onToggleZoom={setZoomed}
-      />
-
-      {/* Feed switcher — drives both the map above and the table below */}
+      {/* Feed switcher — drives both the map and the table below */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex items-center gap-2 shrink-0 px-1">
@@ -104,7 +99,7 @@ export const LiveDataHub: React.FC = () => {
               return (
                 <button
                   key={id}
-                  onClick={() => setTab(id)}
+                  onClick={() => switchTab(id)}
                   aria-pressed={on}
                   className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${
                     on
@@ -131,16 +126,32 @@ export const LiveDataHub: React.FC = () => {
         )}
       </div>
 
-      {/* Content for the active feed. All three stay mounted so the inactive
-          ones keep refreshing in the background. */}
-      <div hidden={tab !== "chokepoints"}>
-        <ChokepointBoard onSnapshot={onChokepoints} onFocusGroup={setFocusGroup} />
-      </div>
-      <div hidden={tab !== "vessels"}>
-        <NearshoreAis onSnapshot={onAis} />
-      </div>
-      <div hidden={tab !== "ports"}>
-        <LivePortWeather onSnapshot={onPorts} />
+      {/* Side-by-side: the map stays pinned while the detail table scrolls. */}
+      <div className="lg:flex lg:gap-4 lg:items-start">
+        <div className="sticky top-2 z-20 h-[42vh] overflow-y-auto lg:top-16 lg:z-10 lg:w-[42%] lg:self-start lg:h-auto lg:max-h-[calc(100vh-5rem)] lg:overflow-visible lg:mb-0 mb-4">
+          <LiveMapLayer
+            tab={tab}
+            lang={language}
+            chokepoints={chokepoints?.chokepoints ?? null}
+            ais={ais}
+            ports={ports}
+            focusGroup={focusGroup}
+            zoomed={zoomed}
+            onToggleZoom={setZoomed}
+          />
+        </div>
+
+        <div className="lg:flex-1 min-w-0 space-y-4">
+          <div hidden={tab !== "chokepoints"}>
+            <ChokepointBoard onSnapshot={onChokepoints} onFocusGroup={setFocusGroup} />
+          </div>
+          <div hidden={tab !== "vessels"}>
+            <NearshoreAis onSnapshot={onAis} />
+          </div>
+          <div hidden={tab !== "ports"}>
+            <LivePortWeather onSnapshot={onPorts} />
+          </div>
+        </div>
       </div>
     </div>
   );
