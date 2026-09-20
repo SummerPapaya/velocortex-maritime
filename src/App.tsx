@@ -383,7 +383,7 @@ export default function App() {
                   </div>
 
                   {/* Right Col: AI Supply Chain Advisory Feed */}
-                  <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 border border-indigo-500/30 shadow-xl flex flex-col justify-between">
+                  <div className="feature-panel accent-indigo rounded-3xl p-6 border shadow-xl flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2 mb-3">
                         <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
@@ -542,22 +542,22 @@ export default function App() {
               <div className="space-y-6 animate-in fade-in duration-300">
                 {/* Top Bento Strip: 4 Executive Gauges */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-gradient-to-br from-blue-900/40 to-slate-900 p-5 rounded-3xl border border-blue-500/30 shadow-md">
+                  <div className="feature-panel accent-blue p-5 rounded-3xl border shadow-md">
                     <span className="text-[10px] uppercase font-bold text-blue-400 block">AI Cost Velocity</span>
                     <h3 className="text-2xl font-extrabold text-white font-mono mt-1">$284.5k USD</h3>
                     <p className="text-xs text-slate-300 mt-1">Projected demurrage mitigation this week</p>
                   </div>
-                  <div className="bg-gradient-to-br from-emerald-900/40 to-slate-900 p-5 rounded-3xl border border-emerald-500/30 shadow-md">
+                  <div className="feature-panel accent-emerald p-5 rounded-3xl border shadow-md">
                     <span className="text-[10px] uppercase font-bold text-emerald-400 block">Cold-Chain SLA</span>
                     <h3 className="text-2xl font-extrabold text-white font-mono mt-1">99.4% Valid</h3>
                     <p className="text-xs text-slate-300 mt-1">1,412 / 1,420 reefers within thermal target</p>
                   </div>
-                  <div className="bg-gradient-to-br from-amber-900/40 to-slate-900 p-5 rounded-3xl border border-amber-500/30 shadow-md">
+                  <div className="feature-panel accent-amber p-5 rounded-3xl border shadow-md">
                     <span className="text-[10px] uppercase font-bold text-amber-400 block">Chokepoint Queue</span>
                     <h3 className="text-2xl font-extrabold text-white font-mono mt-1">+36.2 Hours</h3>
                     <p className="text-xs text-slate-300 mt-1">Average diversion penalty via Cape of Good Hope</p>
                   </div>
-                  <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 p-5 rounded-3xl border border-indigo-500/30 shadow-md">
+                  <div className="feature-panel accent-indigo p-5 rounded-3xl border shadow-md">
                     <span className="text-[10px] uppercase font-bold text-indigo-400 block">Demo Data Cut-off</span>
                     <h3 className="text-2xl font-extrabold text-white font-mono mt-1">{DEMO_BUILD_LABEL}</h3>
                     <p className="text-xs text-slate-300 mt-1">Frozen sample values · no live AIS handshake</p>
@@ -610,7 +610,7 @@ export default function App() {
                     </div>
 
                     {/* SLA Compliance Bento Card */}
-                    <div className="bg-gradient-to-tr from-slate-900 to-indigo-950 text-white rounded-3xl p-6 border border-indigo-500/30 shadow-md space-y-3">
+                    <div className="feature-panel accent-indigo rounded-3xl p-6 border shadow-md space-y-3">
                       <span className="text-[10px] uppercase font-bold text-indigo-400 block">Automated SLA Guarantee</span>
                       <h4 className="text-base font-extrabold">98.8% On-Time Target</h4>
                       <p className="text-xs text-slate-300 leading-relaxed">

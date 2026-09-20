@@ -75,25 +75,27 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
     return true;
   });
 
-  // Theme styles based on mapMode
+  // Base colour of each cartographic mode. These resolve through the theme
+  // tokens rather than fixed hexes, so the console map shares its sea and land
+  // with the Live map and inverts with the palette.
   const getLandmassStyle = () => {
     if (mapMode === "TOPO") {
-      return { fill: "#065f46", stroke: "#047857", opacity: 0.85 };
+      return { fill: "var(--map-land-topo)", stroke: "var(--map-land-topo-line)", opacity: 0.95 };
     }
     if (mapMode === "CHOKEPOINTS") {
-      return { fill: "#0f172a", stroke: "#1e293b", opacity: 0.7 };
+      return { fill: "var(--map-land-dim)", stroke: "var(--map-land-dim-line)", opacity: 0.95 };
     }
-    return { fill: "#1e293b", stroke: "#334155", opacity: 0.9 }; // STANDARD
+    return { fill: "var(--map-land)", stroke: "var(--map-land-line)", opacity: 1 }; // STANDARD
   };
 
-  const getOceanBgClass = () => {
-    if (mapMode === "TOPO") return "bg-[#02182b]";
-    if (mapMode === "CHOKEPOINTS") return "bg-slate-950";
-    return "bg-[#09111e]"; // Classic Navy
+  const getOceanStyle = () => {
+    if (mapMode === "TOPO") return { background: "var(--map-sea-topo)" };
+    if (mapMode === "CHOKEPOINTS") return { background: "var(--map-sea-dim)" };
+    return { background: "var(--map-sea)" }; // Classic sea
   };
 
   return (
-    <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden mb-8 text-white space-y-6">
+    <div className="feature-panel accent-blue rounded-3xl p-6 sm:p-8 border shadow-2xl relative overflow-hidden mb-8 space-y-6">
       
       {/* Map Header & Multi-Mode Controls */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 relative z-10">
@@ -206,12 +208,12 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
       </div>
 
       {/* SVG Map Canvas */}
-      <div className={`relative w-full aspect-[2/1] min-h-[400px] max-h-[600px] ${getOceanBgClass()} rounded-3xl border border-slate-800 overflow-hidden shadow-2xl flex items-center justify-center transition-colors duration-500`}>
+      <div style={getOceanStyle()} className="relative w-full aspect-[2/1] min-h-[400px] max-h-[600px] rounded-3xl border border-slate-800 overflow-hidden shadow-2xl flex items-center justify-center transition-colors duration-500">
         
         {/* Geographic Graticule Grid (Equator & Tropics) */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Subtle Grid Pattern */}
-          <div className="w-full h-full bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+          <div className="map-grid w-full h-full" />
         </div>
 
         <svg viewBox="0 0 1000 500" className="w-full h-full select-none">
@@ -297,8 +299,8 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
                     fontWeight={isOcean || isRegion ? "900" : "600"}
                     letterSpacing={isOcean ? "2" : isRegion ? "1.5" : "0.5"}
                     fill={
-                      isOcean ? "#38bdf8" :
-                      isRegion ? "#94a3b8" : "#64748b"
+                      isOcean ? "var(--map-ocean-label)" :
+                      isRegion ? "var(--map-region-label)" : "var(--map-label-ink)"
                     }
                     opacity={isOcean ? "0.35" : isRegion ? "0.3" : "0.5"}
                     className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
@@ -351,7 +353,7 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
                   stroke={strokeColor}
                   strokeWidth={isSelected ? 3.5 : 2.2}
                   strokeDasharray={route.congestionLevel === "CRITICAL" ? "6,6" : "none"}
-                  className="transition-all cursor-pointer hover:stroke-white"
+                  className="transition-all cursor-pointer hover:stroke-slate-900 dark:hover:stroke-white"
                   onClick={() => onSelectRoute(route.id === selectedRouteId ? null : route.id)}
                 />
                 
@@ -360,11 +362,11 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
                   <text
                     x={(pts[0].x + pts[pts.length - 1].x) / 2}
                     y={(pts[0].y + pts[pts.length - 1].y) / 2 - 15}
-                    fill={isSelected ? "#ffffff" : "#93c5fd"}
+                    fill={isSelected ? "var(--map-route-label)" : "var(--map-route-label-dim)"}
                     fontSize={isSelected ? "11" : "9"}
                     fontWeight="bold"
                     textAnchor="middle"
-                    className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-sans pointer-events-none"
+                    className="map-route-label font-sans pointer-events-none"
                     opacity={isSelected ? "1" : "0.75"}
                   >
                     {route.name} ({route.activeVessels} vessels)
@@ -433,14 +435,14 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
                       width={cp.shortName.length * 6 + 48}
                       height="18"
                       rx="6"
-                      fill="#0f172ae6"
+                      fill="var(--map-label-plate)"
                       stroke={badgeColor}
                       strokeWidth="1.5"
                     />
                     <text
                       x="6"
                       y="1"
-                      fill="#f8fafc"
+                      fill="var(--map-label-ink)"
                       fontSize="9"
                       fontWeight="bold"
                       className="font-sans select-none"

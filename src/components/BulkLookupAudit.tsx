@@ -421,7 +421,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
     <div className="space-y-8 animate-in fade-in duration-300">
       
       {/* Top Banner: Enterprise Bulk Look up Intro */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-indigo-500/30 shadow-2xl relative overflow-hidden">
+      <div className="feature-panel accent-indigo rounded-3xl p-6 sm:p-8 border shadow-2xl relative overflow-hidden">
         <div className="absolute -right-10 -bottom-10 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
         
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
@@ -474,7 +474,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
                     className="fixed inset-0 z-20" 
                     onClick={() => setShowExportMenu(false)} 
                   />
-                  <div className="absolute right-0 mt-2 w-64 bg-slate-900 dark:bg-slate-800 border border-slate-700/80 rounded-2xl shadow-2xl z-30 overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="feature-panel accent-emerald absolute right-0 mt-2 w-64 border rounded-2xl shadow-2xl z-30 overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="p-1.5 space-y-1">
                       <button
                         onClick={() => {
@@ -597,7 +597,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         </div>
 
         {/* Right 5 Cols: Batch Summary Analytics & AI Demurrage Shield */}
-        <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 border border-indigo-500/30 shadow-xl flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-5 feature-panel accent-indigo rounded-3xl p-6 border shadow-xl flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between border-b border-indigo-500/20 pb-3 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">

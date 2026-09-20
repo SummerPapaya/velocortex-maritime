@@ -106,7 +106,7 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ sections }
     <div className="space-y-8">
       
       {/* Top Architectural Overview Banner */}
-      <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-indigo-500/30 shadow-xl relative overflow-hidden">
+      <div className="feature-panel accent-indigo p-6 sm:p-8 rounded-3xl border shadow-xl relative overflow-hidden">
         <div className="absolute right-0 bottom-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-3xl relative z-10">
@@ -258,7 +258,7 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ sections }
       </div>
 
       {/* End-to-End Security Diagram Card */}
-      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6">
+      <div className="feature-panel accent-emerald p-6 sm:p-8 rounded-3xl border shadow-2xl space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
           <div>
             <h3 className="text-xl font-bold text-white flex items-center gap-2">

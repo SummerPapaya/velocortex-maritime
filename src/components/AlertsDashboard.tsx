@@ -99,7 +99,7 @@ export const AlertsDashboard: React.FC<AlertsDashboardProps> = ({
     <div className="space-y-8">
       
       {/* Top Banner: Financial Savings & AI Predictive Impact */}
-      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 text-white p-6 sm:p-8 rounded-3xl border border-emerald-500/30 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="feature-panel accent-emerald p-6 sm:p-8 rounded-3xl border shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="absolute right-0 top-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-2xl relative z-10">

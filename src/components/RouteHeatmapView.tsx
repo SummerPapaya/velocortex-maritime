@@ -141,7 +141,7 @@ export const RouteHeatmapView: React.FC<RouteHeatmapViewProps> = ({
     <div className="space-y-8">
       
       {/* Header Overview Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="feature-panel accent-blue p-6 sm:p-8 rounded-3xl border shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         
         <div className="max-w-2xl relative z-10">
@@ -307,7 +307,7 @@ export const RouteHeatmapView: React.FC<RouteHeatmapViewProps> = ({
 
                 {/* AI Advisory Box */}
                 {advisory ? (
-                  <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white p-4 rounded-2xl border border-indigo-500/30 mb-4 shadow-md">
+                  <div className="feature-panel accent-indigo p-4 rounded-2xl border mb-4 shadow-md">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />

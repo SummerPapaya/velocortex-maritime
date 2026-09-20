@@ -399,7 +399,7 @@ export const ContainerDetailModal: React.FC<ContainerDetailModalProps> = ({ cont
           {activeTab === "ai" && (
             <div className="space-y-6">
               
-              <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 text-white p-6 rounded-3xl border border-indigo-500/30 shadow-xl relative overflow-hidden">
+              <div className="feature-panel accent-indigo p-6 rounded-3xl border shadow-xl relative overflow-hidden">
                 <div className="absolute right-0 top-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
                 
                 <div className="flex items-center justify-between gap-4 mb-4 relative z-10">
