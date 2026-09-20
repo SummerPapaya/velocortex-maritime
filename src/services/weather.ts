@@ -40,6 +40,8 @@ export interface PortWeatherSnapshot {
   fetchedAt: number;
   /** Open-Meteo model observation time of the freshest returned sample. */
   observedAt: string | null;
+  /** Whether these samples came from Open-Meteo or from the bundled snapshot. */
+  feed: FeedStatus;
 }
 
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
@@ -79,7 +81,11 @@ async function getJson<T>(url: string): Promise<T> {
   }
 }
 
-export async function fetchPortWeather(ports: PortRef[] = TRACKED_PORTS): Promise<PortWeatherSnapshot> {
+import { FEED_LIVE, feedFromSnapshot, type FeedStatus } from "./feedStatus";
+import { loadLiveSnapshot, snapshotStamp } from "./liveSnapshot";
+
+/** Batched Open-Meteo request URLs — one call covers every tracked port. */
+function buildUrls(ports: PortRef[]): { forecastUrl: string; marineUrl: string } {
   const lat = ports.map((p) => p.lat).join(",");
   const lng = ports.map((p) => p.lng).join(",");
   const tz = ports.map((p) => encodeURIComponent(p.tz)).join(",");
@@ -88,26 +94,31 @@ export async function fetchPortWeather(ports: PortRef[] = TRACKED_PORTS): Promis
   const seaLat = ports.map((p) => p.seaLat ?? p.lat).join(",");
   const seaLng = ports.map((p) => p.seaLng ?? p.lng).join(",");
 
-  const forecastUrl =
-    `${FORECAST_URL}?latitude=${lat}&longitude=${lng}` +
-    `&current=temperature_2m,wind_speed_10m,wind_gusts_10m,precipitation,weather_code` +
-    `&wind_speed_unit=kn&timezone=${tz}`;
+  return {
+    forecastUrl:
+      `${FORECAST_URL}?latitude=${lat}&longitude=${lng}` +
+      `&current=temperature_2m,wind_speed_10m,wind_gusts_10m,precipitation,weather_code` +
+      `&wind_speed_unit=kn&timezone=${tz}`,
+    marineUrl:
+      `${MARINE_URL}?latitude=${seaLat}&longitude=${seaLng}` +
+      `&current=wave_height,wave_period,swell_wave_height&timezone=${tz}`,
+  };
+}
 
-  const marineUrl =
-    `${MARINE_URL}?latitude=${seaLat}&longitude=${seaLng}` +
-    `&current=wave_height,wave_period,swell_wave_height&timezone=${tz}`;
-
-  const [forecastRaw, marineRaw] = await Promise.all([
-    getJson<unknown>(forecastUrl),
-    // Sea state is a bonus layer: if the marine model has no cell for a port we
-    // still want wind and temperature to render.
-    getJson<unknown>(marineUrl).catch(() => []),
-  ]);
-
+/**
+ * The single parser for an Open-Meteo response. Live payloads and the bundled
+ * snapshot are decoded by the same code, so a cached panel and a live one can
+ * only differ in freshness — never in shape.
+ */
+function parsePortWeather(
+  ports: PortRef[],
+  forecastRaw: unknown,
+  marineRaw: unknown,
+  feed: FeedStatus,
+  fetchedAt: number,
+): PortWeatherSnapshot {
   const forecastList = asArray(forecastRaw as Record<string, unknown>);
   const marineList = asArray(marineRaw as Record<string, unknown>);
-
-  const now = Date.now();
 
   const result: PortWeather[] = ports.map((port, i) => {
     const f = (forecastList[i] ?? {}) as Record<string, any>;
@@ -137,7 +148,56 @@ export async function fetchPortWeather(ports: PortRef[] = TRACKED_PORTS): Promis
   const observedAt =
     (forecastList.find((f: any) => typeof f?.current?.time === "string") as any)?.current?.time ?? null;
 
-  return { ports: result, fetchedAt: now, observedAt };
+  return { ports: result, fetchedAt, observedAt, feed };
+}
+
+export async function fetchPortWeatherLive(ports: PortRef[] = TRACKED_PORTS): Promise<PortWeatherSnapshot> {
+  const { forecastUrl, marineUrl } = buildUrls(ports);
+  const [forecastRaw, marineRaw] = await Promise.all([
+    getJson<unknown>(forecastUrl),
+    // Sea state is a bonus layer: if the marine model has no cell for a port we
+    // still want wind and temperature to render.
+    getJson<unknown>(marineUrl).catch(() => []),
+  ]);
+  const snapshot = parsePortWeather(ports, forecastRaw, marineRaw, FEED_LIVE, Date.now());
+  if (snapshot.ports.every((p) => p.tempC === null && p.windKt === null)) {
+    throw new Error("Open-Meteo returned no usable samples");
+  }
+  return snapshot;
+}
+
+/**
+ * Decodes the bundled build-time snapshot.
+ *
+ * The snapshot was captured for TRACKED_PORTS in their declared order, which is
+ * the only way this is ever called, so the position-to-port mapping holds.
+ */
+export async function portWeatherFromSnapshot(
+  error: unknown,
+  ports: PortRef[] = TRACKED_PORTS,
+): Promise<PortWeatherSnapshot> {
+  const snapshot = await loadLiveSnapshot();
+  const raw = snapshot.ports ?? {};
+  if (!raw.forecast) {
+    throw new Error(`live Open-Meteo unreachable and the bundled snapshot holds no weather (${String(error)})`);
+  }
+  const generatedAt = snapshotStamp(snapshot);
+  return parsePortWeather(
+    ports,
+    raw.forecast,
+    raw.marine,
+    feedFromSnapshot(generatedAt, error),
+    Date.parse(generatedAt),
+  );
+}
+
+/** Live first, bundled snapshot second. See `feedStatus.ts` for why. */
+export async function fetchPortWeather(ports: PortRef[] = TRACKED_PORTS): Promise<PortWeatherSnapshot> {
+  try {
+    return await fetchPortWeatherLive(ports);
+  } catch (error) {
+    return portWeatherFromSnapshot(error, ports);
+  }
 }
 
 /** WMO weather interpretation codes, compressed to the cases worth labelling. */

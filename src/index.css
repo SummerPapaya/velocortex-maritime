@@ -1,1 +1,93 @@
 @import "tailwindcss";
+
+/*
+ * The header's theme switch writes a `.dark` class onto <html>, but Tailwind v4
+ * ships `dark:` bound to the `prefers-color-scheme` media query by default — so
+ * the switch had no effect on any utility class and the page silently followed
+ * the operating system instead. Rebinding the variant to the class makes the
+ * switch real, which is a prerequisite for judging either palette.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Surface tokens.
+ *
+ * The shell and the cards used to pick their own greys: the page ran on
+ * slate-100 against white cards, the map card carried its own blue-grey
+ * gradient, and each Live panel outlined itself in a different saturated
+ * colour (indigo / emerald / cyan). Side by side that reads as three different
+ * materials rather than one product.
+ *
+ * Everything structural now resolves through these tokens, which flip together
+ * with the theme, so a card, an inner tile and the page keep a fixed
+ * relationship in both modes. Saturation is reserved for meaning — severity,
+ * risk, live status — instead of being spent on borders.
+ */
+:root {
+  --page: #f4f6fa;
+  --surface: #ffffff;
+  --surface-2: #f7f9fc;
+  --line: #e5e9f0;
+  --line-strong: #d3dae4;
+
+  /* Cartography: sea sits one step below the card, land one step above it. */
+  --sea: #edf3fa;
+  --land: #e1e7ef;
+  --land-line: #cbd4e0;
+}
+
+.dark {
+  --page: #060a13;
+  --surface: #0e1626;
+  --surface-2: #172033;
+  --line: #1d2740;
+  --line-strong: #2b3757;
+
+  /* Land must stay a clear step above the sea in the dark palette too — the
+     first pass had them within a few points of each other and whole continents
+     read as one black mass. */
+  --sea: #0a1220;
+  --land: #223047;
+  --land-line: #3c4d6c;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-sea: var(--sea);
+  --color-land: var(--land);
+  --color-land-line: var(--land-line);
+}
+
+/*
+ * The Live panel is one workstation, not two stacked cards: on desktop the map
+ * and the detail column are given the same height, and the detail column
+ * scrolls inside itself so a corridor can be read without scrolling the map out
+ * of view. The height is clamped so the panes stay sane from a 13" laptop to a
+ * large display.
+ */
+@media (min-width: 1024px) {
+  .live-pane {
+    height: clamp(400px, calc(100vh - 14rem), 540px);
+  }
+}
+
+/* A quiet scrollbar for the panes that scroll internally. */
+.pane-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.pane-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.pane-scroll::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 9999px;
+}
+.pane-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}

@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.cjs",
     "lint": "tsc --noEmit",
-    "gen:map": "node scripts/build-world-map.mjs src/data/worldMap.ts"
+    "gen:map": "node scripts/build-world-map.mjs src/data/worldMap.ts",
+    "snapshot:live": "tsx scripts/snapshot-live.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

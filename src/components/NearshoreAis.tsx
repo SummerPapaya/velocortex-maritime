@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Radar, RefreshCw, WifiOff, Navigation, Info, Ship, Droplets, Users, Wrench, ExternalLink } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { fetchAisSnapshot, hasGlobalAisProxy, type AisSnapshot, type VesselCategory } from "../services/ais";
+import { FeedBadge, FeedNotice } from "./FeedBadge";
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
 
@@ -127,8 +128,8 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
     : "--:--:--";
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-emerald-500/30 shadow-sm space-y-5">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+    <section className="bg-surface rounded-3xl p-6 border border-line shadow-sm space-y-5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-line pb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
             <Radar className="w-5 h-5" />
@@ -136,10 +137,10 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
           <div>
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === "zh" ? "近岸 AIS 船位 · 实测实时" : "Nearshore AIS Vessel Positions · Live"}</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300/70 dark:border-emerald-800/70 inline-flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                LIVE
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-line bg-surface-2 text-slate-600 dark:text-slate-300">
+                {snapshot?.sourceName ?? "Digitraffic"}
               </span>
+              {snapshot && <FeedBadge feed={snapshot.feed} lang={lang} />}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {snapshot
@@ -171,34 +172,37 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
         </div>
       </div>
 
+      {/*
+        Only reachable when the provider and the bundled snapshot both fail.
+      */}
       {failed && (
         <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300/70 dark:border-amber-800/70">
           <WifiOff className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-800 dark:text-amber-200 space-y-1">
             <p className="font-bold">
-              {lang === "zh"
-                ? "AIS 船位暂不可用（离线预览或网络受限）"
-                : "AIS positions unavailable (offline preview or network restricted)"}
+              {lang === "zh" ? "AIS 船位与本地快照均不可用" : "Neither the AIS feed nor the bundled snapshot could be read"}
             </p>
             <p className="text-amber-700/90 dark:text-amber-300/90">
               {lang === "zh"
-                ? "本模块依赖开放 AIS 接口；其余演示数据集照常显示，不受影响。"
-                : "This module depends on the open AIS feed; the rest of the demo dataset renders unaffected."}
+                ? "本模块优先取开放 AIS 接口，失败时回落到构建期快照；两者都读不到时才会显示这条提示。"
+                : "This module prefers the live open AIS feed and falls back to a build-time snapshot; this notice only appears when both are unreadable."}
             </p>
           </div>
         </div>
       )}
 
+      {snapshot && <FeedNotice feed={snapshot.feed} lang={lang} />}
+
       {snapshot && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "在线船舶" : "Vessels reporting"}
             </span>
             <span className="font-mono text-lg font-extrabold text-slate-900 dark:text-white">{snapshot.total}</span>
             <span className="text-[10px] text-slate-400 block">{lang === "zh" ? "最近一次定位" : "latest position"}</span>
           </div>
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "航行中 (≥1 kn)" : "Under way (≥1 kn)"}
             </span>
@@ -208,7 +212,7 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
               {lang === "zh" ? "在航" : "moving"}
             </span>
           </div>
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "货船 / 油轮" : "Cargo / tanker"}
             </span>
@@ -217,7 +221,7 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
             </span>
             <span className="text-[10px] text-slate-400 block">{lang === "zh" ? "AIS 船型码 7x / 8x" : "AIS type codes 7x / 8x"}</span>
           </div>
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "最快航速" : "Fastest hull"}
             </span>
@@ -239,7 +243,7 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
         <div className="h-[180px] rounded-2xl bg-slate-100 dark:bg-slate-800/60 animate-pulse" />
       ) : (
         snapshot && (
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4 space-y-2">
+          <div className="rounded-2xl border border-line bg-surface-2 p-4 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Navigation className="w-3.5 h-3.5 text-emerald-500" />
@@ -307,7 +311,7 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
         )
       )}
 
-      <div className="flex flex-col gap-2 pt-1 text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800">
+      <div className="flex flex-col gap-2 pt-1 text-[11px] text-slate-500 dark:text-slate-400 border-t border-line">
         <div className="flex items-start gap-2">
           <Info className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
           <span>
@@ -340,7 +344,7 @@ export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => vo
               : "Data hygiene: AIS encodes \u201cnot available\u201d as sentinel values (102.3 kn speed, 360.0° course) and some transponders report speeds beyond any physical limit. Both are treated as invalid and shown as \u201c—\u201d, so the fastest-hull figure never reads absurdly. Vessel classes are coarsened to cargo (7x) / tanker (8x) / passenger (6x) / tug from the AIS code; AIS alone cannot tell a container ship from a bulk carrier or a reefer."}
           </span>
         </div>
-        <div className="flex flex-col gap-2 pt-2 mt-1 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex flex-col gap-2 pt-2 mt-1 border-t border-line">
           <span className="text-[10px] uppercase font-bold text-slate-400">
             {lang === "zh" ? "这几片海域要看商业全量，去这里（外部站点）" : "For these waters, the commercial picture continues here (external)"}
           </span>

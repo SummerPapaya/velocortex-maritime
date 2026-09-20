@@ -84,8 +84,8 @@ export const LiveDataHub: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {/* Feed switcher — drives both the map and the table below */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-3">
+      {/* Feed switcher — drives both the map and the table beneath it */}
+      <div className="bg-surface rounded-2xl border border-line shadow-sm p-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex items-center gap-2 shrink-0 px-1">
             <Layers className="w-4 h-4 text-slate-400" />
@@ -104,7 +104,7 @@ export const LiveDataHub: React.FC = () => {
                   className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${
                     on
                       ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-sm"
-                      : "bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500"
+                      : "bg-surface-2 text-slate-600 dark:text-slate-300 border-line hover:border-line-strong"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -126,9 +126,26 @@ export const LiveDataHub: React.FC = () => {
         )}
       </div>
 
-      {/* Side-by-side: the map stays pinned while the detail table scrolls. */}
-      <div className="lg:flex lg:gap-4 lg:items-start">
-        <div className="sticky top-2 z-20 h-[42vh] overflow-y-auto lg:top-16 lg:z-10 lg:w-[42%] lg:self-start lg:h-auto lg:max-h-[calc(100vh-5rem)] lg:overflow-visible lg:mb-0 mb-4">
+      {/*
+        One workstation, not two stacked cards.
+
+        The map and the detail column are given the same height and a matched
+        frame, so they read as two halves of one instrument instead of two
+        widgets that happen to sit near each other. The detail column then
+        scrolls *inside itself*: opening a corridor, or reading the footnotes,
+        no longer pushes the map off screen — which is the only reason to put a
+        map beside a table in the first place.
+
+        The split is not even, deliberately. The world map is a wide drawing and
+        the corridor table has six columns; the map takes the smaller share at
+        the narrow end of the range and grows only once there is room for both,
+        because a cramped table is unreadable while a slightly small map is not.
+
+        Below lg the columns stack and the map becomes a shallow sticky band,
+        which still keeps it on screen while the table passes underneath.
+      */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,35%)_minmax(0,1fr)] xl:grid-cols-[minmax(0,40%)_minmax(0,1fr)] lg:gap-4">
+        <div className="sticky top-2 z-20 mb-4 h-[44vh] live-pane lg:static lg:mb-0">
           <LiveMapLayer
             tab={tab}
             lang={language}
@@ -141,15 +158,17 @@ export const LiveDataHub: React.FC = () => {
           />
         </div>
 
-        <div className="lg:flex-1 min-w-0 space-y-4">
-          <div hidden={tab !== "chokepoints"}>
-            <ChokepointBoard onSnapshot={onChokepoints} onFocusGroup={setFocusGroup} />
-          </div>
-          <div hidden={tab !== "vessels"}>
-            <NearshoreAis onSnapshot={onAis} />
-          </div>
-          <div hidden={tab !== "ports"}>
-            <LivePortWeather onSnapshot={onPorts} />
+        <div className="live-pane pane-scroll lg:overflow-y-auto lg:pr-1">
+          <div className="space-y-4">
+            <div hidden={tab !== "chokepoints"}>
+              <ChokepointBoard onSnapshot={onChokepoints} onFocusGroup={setFocusGroup} />
+            </div>
+            <div hidden={tab !== "vessels"}>
+              <NearshoreAis onSnapshot={onAis} />
+            </div>
+            <div hidden={tab !== "ports"}>
+              <LivePortWeather onSnapshot={onPorts} />
+            </div>
           </div>
         </div>
       </div>

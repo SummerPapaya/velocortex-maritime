@@ -18,6 +18,7 @@ import {
   type ChokepointSnapshot,
 } from "../services/chokepoints";
 import { SEVERITY_COLOR, SEVERITY_LABEL } from "./LiveMapLayer";
+import { FeedBadge, FeedNotice } from "./FeedBadge";
 
 const AUTO_REFRESH_MS = 30 * 60 * 1000;
 
@@ -72,20 +73,25 @@ const SeverityChip: React.FC<{ severity: ChokepointSeverity | null; pct: number 
 };
 
 const ChokepointRow: React.FC<{ point: Chokepoint; lang: "en" | "zh" }> = ({ point, lang }) => {
-  const path = useMemo(() => sparklinePath(point.series, 96, 22), [point.series]);
+  const path = useMemo(() => sparklinePath(point.series, 76, 22), [point.series]);
   const peakLabel = point.peak ? `${lang === "zh" ? "峰值" : "Peak"} ${point.peak.nTotal} · ${point.peak.date}` : "";
 
   return (
-    <div className="grid grid-cols-[1fr_auto] sm:grid-cols-[minmax(0,1.5fr)_96px_88px_104px_88px_80px] items-center gap-x-4 gap-y-2 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+    <div className="grid grid-cols-[1fr_auto] sm:grid-cols-[minmax(0,1.6fr)_76px_72px_88px_72px_64px] items-center gap-x-3 gap-y-2 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
       <div className="min-w-0 flex items-center gap-2">
-        <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
+        {/* The column narrows with the window, so the full name stays reachable
+            on hover instead of only living in a tooltip-less truncated label. */}
+        <span
+          title={lang === "zh" ? point.nameZh : point.name}
+          className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate"
+        >
           {lang === "zh" ? point.nameZh : point.name}
         </span>
       </div>
 
       <svg
-        viewBox="0 0 96 22"
-        className="hidden sm:block w-[96px] h-[22px] overflow-visible"
+        viewBox="0 0 76 22"
+        className="hidden sm:block w-[76px] h-[22px] overflow-visible"
         aria-hidden="true"
         title={peakLabel}
       >
@@ -202,8 +208,8 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
   };
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-indigo-500/30 shadow-sm space-y-5">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+    <section className="bg-surface rounded-3xl p-6 border border-line shadow-sm space-y-5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-line pb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
             <Anchor className="w-5 h-5" />
@@ -211,9 +217,10 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
           <div>
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === "zh" ? "咽喉点过境量 · 官方日度统计" : "Chokepoint Transit Volumes · Official Daily Statistics"}</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300 border border-indigo-300/70 dark:border-indigo-800/70">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-line bg-surface-2 text-slate-600 dark:text-slate-300">
                 IMF PORTWATCH
               </span>
+              {snapshot && <FeedBadge feed={snapshot.feed} lang={lang} />}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {lang === "zh"
@@ -243,27 +250,31 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
         </div>
       </div>
 
+      {/*
+        Only reachable when the live query *and* the bundled snapshot both fail,
+        which means the build shipped without one — hence the wording.
+      */}
       {failed && (
         <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300/70 dark:border-amber-800/70">
           <WifiOff className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-800 dark:text-amber-200 space-y-1">
             <p className="font-bold">
-              {lang === "zh"
-                ? "官方统计暂不可用（离线预览或网络受限）"
-                : "Official statistics unavailable (offline preview or network restricted)"}
+              {lang === "zh" ? "官方统计与本地快照均不可用" : "Neither the official series nor the bundled snapshot could be read"}
             </p>
             <p className="text-amber-700/90 dark:text-amber-300/90">
               {lang === "zh"
-                ? "本模块依赖 IMF PortWatch 在线接口；其余演示数据集照常显示，不受影响。"
-                : "This module depends on the live IMF PortWatch service; the rest of the demo dataset renders unaffected."}
+                ? "本模块优先取 IMF PortWatch 在线接口，失败时回落到构建期快照；两者都读不到时才会显示这条提示。可运行 npm run snapshot:live 重新生成快照。"
+                : "This module prefers the live IMF PortWatch service and falls back to a build-time snapshot; this notice only appears when both are unreadable. Regenerate the snapshot with npm run snapshot:live."}
             </p>
           </div>
         </div>
       )}
 
+      {snapshot && <FeedNotice feed={snapshot.feed} lang={lang} />}
+
       {snapshot && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "追踪咽喉点" : "Chokepoints tracked"}
             </span>
@@ -271,7 +282,7 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
               {snapshot.chokepoints.length}
             </span>
           </div>
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "好望角 ÷ 苏伊士" : "Cape ÷ Suez"}
             </span>
@@ -282,14 +293,14 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
               {lang === "zh" ? "绕行强度指示" : "rerouting indicator"}
             </span>
           </div>
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "苏伊士 7 日均值" : "Suez 7-day avg"}
             </span>
             <span className="font-mono text-lg font-extrabold text-slate-900 dark:text-white">{fmt(suez, 1)}</span>
             <span className="text-[10px] text-slate-400 block">{lang === "zh" ? "艘/日" : "calls/day"}</span>
           </div>
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3">
+          <div className="rounded-2xl border border-line bg-surface-2 p-3">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               {lang === "zh" ? "低于常态 30% 以上" : "Below 70% of own norm"}
             </span>
@@ -333,7 +344,7 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
       ) : (
         snapshot && (
           <div className="space-y-3">
-            <div className="hidden sm:grid grid-cols-[minmax(0,1.5fr)_96px_88px_104px_88px_80px] gap-x-4 px-3 text-[10px] uppercase font-bold text-slate-400">
+            <div className="hidden sm:grid grid-cols-[minmax(0,1.6fr)_76px_72px_88px_72px_64px] gap-x-3 px-3 text-[10px] uppercase font-bold text-slate-400">
               <span>{lang === "zh" ? "咽喉点" : "Chokepoint"}</span>
               <span>{lang === "zh" ? `${snapshot.windowDays} 天走势` : `${snapshot.windowDays}-day trend`}</span>
               <span>{lang === "zh" ? "7 日均值" : "7-day avg"}</span>
@@ -348,7 +359,7 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
               const isOpen = open.has(group);
               const groupSeverity = severityOf(pct);
               return (
-                <div key={group} className="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div key={group} className="rounded-2xl border border-line overflow-hidden">
                   <button
                     onClick={() => toggle(group)}
                     aria-expanded={isOpen}
@@ -385,7 +396,7 @@ export const ChokepointBoard: React.FC<Props> = ({ onSnapshot, onFocusGroup }) =
         )
       )}
 
-      <div className="flex flex-col gap-2 pt-1 text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800">
+      <div className="flex flex-col gap-2 pt-1 text-[11px] text-slate-500 dark:text-slate-400 border-t border-line">
         <div className="flex items-start gap-2">
           <Info className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
           <span>

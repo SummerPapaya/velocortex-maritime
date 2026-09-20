@@ -24,6 +24,9 @@
  * active — it only reads `coverageLabel*` and `sourceName` to caption itself.
  */
 
+import { FEED_LIVE, feedFromSnapshot, type FeedStatus } from "./feedStatus";
+import { loadLiveSnapshot, snapshotStamp } from "./liveSnapshot";
+
 const DIGITRAFFIC_BASE = "https://meri.digitraffic.fi/api/ais/v1";
 const REQUEST_TIMEOUT_MS = 20_000;
 
@@ -66,6 +69,8 @@ export interface AisSnapshot {
   /** Feed-side observation time reported by the provider. */
   dataUpdatedTime: string | null;
   fetchedAt: number;
+  /** Whether these positions came from the provider or from the bundled snapshot. */
+  feed: FeedStatus;
 }
 
 const EMPTY_CATEGORIES: Record<VesselCategory, number> = {
@@ -161,7 +166,8 @@ function summarise(
     | "sourceName"
     | "sourceUrl"
     | "dataUpdatedTime"
-  >,
+    | "feed"
+  > & { fetchedAt: number },
 ): AisSnapshot {
   const byCategory = { ...EMPTY_CATEGORIES };
   let minLat = Infinity;
@@ -184,22 +190,25 @@ function summarise(
     underway: vessels.filter((v) => (v.sog ?? 0) >= UNDERWAY_SOG_KN).length,
     byCategory,
     bbox: vessels.length > 0 ? { minLat, maxLat, minLon, maxLon } : null,
-    fetchedAt: Date.now(),
+    fetchedAt: base.fetchedAt,
   };
 }
 
-/** Digitraffic open AIS: free, key-less, CORS-enabled, Baltic Sea coverage. */
-async function fetchDigitraffic(): Promise<AisSnapshot> {
-  const [locations, vessels] = await Promise.all([
-    getJson<any>(`${DIGITRAFFIC_BASE}/locations`),
-    // The static register is a nice-to-have: positions still render without it.
-    getJson<any>(`${DIGITRAFFIC_BASE}/vessels`).catch(() => []),
-  ]);
-
+/**
+ * The single Digitraffic parser. It runs unchanged on a live response and on
+ * the bundled snapshot, so cached positions are decoded by exactly the code
+ * that decodes live ones — sentinel speeds, register lookups and all.
+ */
+function parseDigitraffic(
+  locations: any,
+  registerRaw: unknown,
+  feed: FeedStatus,
+  fetchedAt: number,
+): AisSnapshot {
   const register = new Map<number, any>();
-  if (Array.isArray(vessels)) {
-    for (const v of vessels) {
-      const mmsi = finite(v?.mmsi);
+  if (Array.isArray(registerRaw)) {
+    for (const v of registerRaw) {
+      const mmsi = finite((v as any)?.mmsi);
       if (mmsi !== null) register.set(mmsi, v);
     }
   }
@@ -247,7 +256,38 @@ async function fetchDigitraffic(): Promise<AisSnapshot> {
     sourceName: "Digitraffic (Fintraffic)",
     sourceUrl: "https://www.digitraffic.fi/en/marine-traffic/",
     dataUpdatedTime: typeof locations?.dataUpdatedTime === "string" ? locations.dataUpdatedTime : null,
+    feed,
+    fetchedAt,
   });
+}
+
+/** Digitraffic open AIS: free, key-less, CORS-enabled, Baltic Sea coverage. */
+async function fetchDigitrafficLive(): Promise<AisSnapshot> {
+  const [locations, vessels] = await Promise.all([
+    getJson<any>(`${DIGITRAFFIC_BASE}/locations`),
+    // The static register is a nice-to-have: positions still render without it.
+    getJson<any>(`${DIGITRAFFIC_BASE}/vessels`).catch(() => []),
+  ]);
+  const snapshot = parseDigitraffic(locations, vessels, FEED_LIVE, Date.now());
+  if (snapshot.total === 0) throw new Error("the AIS feed returned no positions");
+  return snapshot;
+}
+
+/** Decodes the bundled build-time snapshot back into the same shape. */
+export async function aisFromSnapshot(error: unknown): Promise<AisSnapshot> {
+  const snapshot = await loadLiveSnapshot();
+  const raw = snapshot.ais ?? {};
+  const features = raw?.locations?.features;
+  if (!Array.isArray(features) || features.length === 0) {
+    throw new Error(`live AIS unreachable and the bundled snapshot holds no positions (${String(error)})`);
+  }
+  const generatedAt = snapshotStamp(snapshot);
+  return parseDigitraffic(
+    raw.locations,
+    raw.vessels,
+    feedFromSnapshot(generatedAt, error),
+    Date.parse(generatedAt),
+  );
 }
 
 /** Global feed via a deployed proxy. Expects the snapshot shape back. */
@@ -290,6 +330,8 @@ async function fetchViaProxy(proxyUrl: string): Promise<AisSnapshot> {
     sourceName: typeof data?.sourceName === "string" ? data.sourceName : "aisstream.io",
     sourceUrl: typeof data?.sourceUrl === "string" ? data.sourceUrl : "https://aisstream.io/",
     dataUpdatedTime: typeof data?.dataUpdatedTime === "string" ? data.dataUpdatedTime : null,
+    feed: FEED_LIVE,
+    fetchedAt: Date.now(),
   });
 }
 
@@ -297,10 +339,15 @@ export function hasGlobalAisProxy(): boolean {
   return typeof import.meta.env?.VITE_AIS_PROXY_URL === "string" && import.meta.env.VITE_AIS_PROXY_URL !== "";
 }
 
+/** Live first, bundled snapshot second. See `feedStatus.ts` for why. */
 export async function fetchAisSnapshot(): Promise<AisSnapshot> {
   const proxyUrl = import.meta.env?.VITE_AIS_PROXY_URL;
-  if (typeof proxyUrl === "string" && proxyUrl !== "") {
-    return fetchViaProxy(proxyUrl);
+  try {
+    if (typeof proxyUrl === "string" && proxyUrl !== "") {
+      return await fetchViaProxy(proxyUrl);
+    }
+    return await fetchDigitrafficLive();
+  } catch (error) {
+    return aisFromSnapshot(error);
   }
-  return fetchDigitraffic();
 }

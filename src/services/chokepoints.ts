@@ -20,6 +20,9 @@
  * be called straight from a static bundle with no proxy.
  */
 
+import { FEED_LIVE, feedFromSnapshot, type FeedStatus } from "./feedStatus";
+import { loadLiveSnapshot, snapshotStamp } from "./liveSnapshot";
+
 const QUERY_URL =
   "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query";
 
@@ -161,6 +164,8 @@ export interface ChokepointSnapshot {
   /** Human-readable reference window the baselines were computed over. */
   baselineWindow: { start: string; end: string };
   fetchedAt: number;
+  /** Whether these numbers came from PortWatch or from the bundled snapshot. */
+  feed: FeedStatus;
 }
 
 function slug(name: string): string {
@@ -298,17 +303,22 @@ export function severityOf(pct: number | null): ChokepointSeverity | null {
   return "SURGE";
 }
 
-export async function fetchChokepoints(): Promise<ChokepointSnapshot> {
-  const latestDate = await fetchLatestDate();
-  const start = isoDay(new Date(Date.parse(`${latestDate}T00:00:00Z`) - WINDOW_DAYS * DAY_MS));
-
-  // The baseline is a nice-to-have: if the aggregate query is refused, the panel
-  // still renders levels and week-on-week moves rather than failing whole.
-  const [rows, baselines] = await Promise.all([
-    fetchWindow(start),
-    fetchBaselines().catch(() => new Map<string, number>()),
-  ]);
-
+/**
+ * The single derivation path. Live rows and snapshot rows go through this
+ * unchanged, so a cached panel and a live panel cannot drift apart — only the
+ * transport differs.
+ */
+function assemble(
+  rows: ChokepointRow[],
+  baselines: Map<string, number>,
+  meta: {
+    latestDate: string;
+    windowDays: number;
+    baselineWindow: { start: string; end: string };
+    fetchedAt: number;
+    feed: FeedStatus;
+  },
+): ChokepointSnapshot {
   const byName = new Map<string, ChokepointDay[]>();
   for (const row of rows) {
     const list = byName.get(row.portname) ?? [];
@@ -327,7 +337,7 @@ export async function fetchChokepoints(): Promise<ChokepointSnapshot> {
   byName.forEach((series, name) => {
     series.sort((a, b) => a.date.localeCompare(b.date));
 
-    const meta: ChokepointMeta =
+    const metaEntry: ChokepointMeta =
       META[name] ?? { zh: name, group: "ASIA", lat: 0, lng: 0 };
 
     const last7 = series.slice(-7);
@@ -351,10 +361,10 @@ export async function fetchChokepoints(): Promise<ChokepointSnapshot> {
     chokepoints.push({
       id: slug(name),
       name,
-      nameZh: meta.zh,
-      group: meta.group,
-      lat: meta.lat,
-      lng: meta.lng,
+      nameZh: metaEntry.zh,
+      group: metaEntry.group,
+      lat: metaEntry.lat,
+      lng: metaEntry.lng,
       series,
       latest: series.length > 0 ? series[series.length - 1] : null,
       avg7,
@@ -373,11 +383,98 @@ export async function fetchChokepoints(): Promise<ChokepointSnapshot> {
 
   return {
     chokepoints,
+    latestDate: meta.latestDate,
+    windowDays: meta.windowDays,
+    baselineWindow: meta.baselineWindow,
+    fetchedAt: meta.fetchedAt,
+    feed: meta.feed,
+  };
+}
+
+export async function fetchChokepointsLive(): Promise<ChokepointSnapshot> {
+  const latestDate = await fetchLatestDate();
+  const start = isoDay(new Date(Date.parse(`${latestDate}T00:00:00Z`) - WINDOW_DAYS * DAY_MS));
+
+  // The baseline is a nice-to-have: if the aggregate query is refused, the panel
+  // still renders levels and week-on-week moves rather than failing whole.
+  const [rows, baselines] = await Promise.all([
+    fetchWindow(start),
+    fetchBaselines().catch(() => new Map<string, number>()),
+  ]);
+
+  // An empty window is a failure, not a valid answer — without this the panel
+  // would render "0 chokepoints" as if that were a finding.
+  if (rows.length === 0) throw new Error("PortWatch returned an empty window");
+
+  return assemble(rows, baselines, {
     latestDate,
     windowDays: WINDOW_DAYS,
     baselineWindow: { start: BASELINE_START, end: BASELINE_END },
     fetchedAt: Date.now(),
-  };
+    feed: FEED_LIVE,
+  });
+}
+
+/** Decodes the bundled build-time snapshot back into the same shape. */
+export async function chokepointsFromSnapshot(error: unknown): Promise<ChokepointSnapshot> {
+  const snapshot = await loadLiveSnapshot();
+  const raw = snapshot.chokepoints ?? {};
+  const labels: string[] = Array.isArray(raw.rowFields)
+    ? raw.rowFields
+    : ["portname", "date", "nTotal", "nContainer", "nTanker", "capacity"];
+  const tuples: unknown[][] = Array.isArray(raw.rows) ? raw.rows : [];
+  if (tuples.length === 0) {
+    throw new Error(`live PortWatch unreachable and the bundled snapshot holds no chokepoint rows (${String(error)})`);
+  }
+
+  const rows: ChokepointRow[] = [];
+  for (const tuple of tuples) {
+    const record: Record<string, unknown> = {};
+    labels.forEach((key, i) => {
+      record[key] = tuple[i];
+    });
+    if (typeof record.portname !== "string" || typeof record.date !== "string") continue;
+    rows.push({
+      portname: record.portname,
+      date: record.date,
+      nTotal: num(record.nTotal),
+      nContainer: num(record.nContainer),
+      nTanker: num(record.nTanker),
+      capacity: num(record.capacity),
+    });
+  }
+
+  const baselines = new Map<string, number>();
+  for (const pair of Array.isArray(raw.baselines) ? raw.baselines : []) {
+    if (Array.isArray(pair) && typeof pair[0] === "string" && typeof pair[1] === "number") {
+      baselines.set(pair[0], pair[1]);
+    }
+  }
+
+  const generatedAt = snapshotStamp(snapshot);
+
+  return assemble(rows, baselines, {
+    latestDate: typeof raw.latestDate === "string" ? raw.latestDate : "",
+    windowDays: typeof raw.windowDays === "number" ? raw.windowDays : WINDOW_DAYS,
+    baselineWindow: {
+      start: typeof raw?.baselineWindow?.start === "string" ? raw.baselineWindow.start : BASELINE_START,
+      end: typeof raw?.baselineWindow?.end === "string" ? raw.baselineWindow.end : BASELINE_END,
+    },
+    fetchedAt: Date.parse(generatedAt),
+    feed: feedFromSnapshot(generatedAt, error),
+  });
+}
+
+/**
+ * Live first, snapshot second. The fallback is the reason this tab can be
+ * demonstrated offline at all, and `snapshot.feed` tells the UI which one it got.
+ */
+export async function fetchChokepoints(): Promise<ChokepointSnapshot> {
+  try {
+    return await fetchChokepointsLive();
+  } catch (error) {
+    return chokepointsFromSnapshot(error);
+  }
 }
 
 /**

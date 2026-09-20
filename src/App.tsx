@@ -174,7 +174,7 @@ export default function App() {
   const unackAlertCount = alerts.filter(a => !a.acknowledged).length;
 
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-200 ${darkMode ? "bg-slate-950 text-slate-100" : "bg-slate-100 text-slate-900"}`}>
+    <div className="min-h-screen font-sans transition-colors duration-200 bg-page text-slate-900 dark:text-slate-100">
       
       {/* Top Header */}
       <Header
@@ -444,7 +444,7 @@ export default function App() {
                 {/* Right 4 Cols: Urgent IoT Anomalies & Action Desk */}
                 <div className="lg:col-span-4 space-y-6">
                   {/* Urgent Anomaly Stream Card */}
-                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-red-500/30 shadow-lg space-y-4">
+                  <div className="bg-surface rounded-3xl p-6 border border-line shadow-sm space-y-4">
                     <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
@@ -714,10 +714,19 @@ export default function App() {
         {/* TAB 1.5: LIVE DATA — every panel on this tab is a real external feed */}
         {activeTab === "live" && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-cyan-950/30 p-5">
-              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                {language === "zh" ? "实时数据层 · 三块都是真实外部数据" : "Live Data Layer · all three panels are real external feeds"}
-              </h2>
+            {/*
+              A neutral panel, not a third colour scheme. Every feed on this tab
+              is now labelled at its own card, so the page-level banner only has
+              to draw the boundary — announcing it in an emerald-teal-cyan wash
+              made the live layer look like a different product from the shell.
+            */}
+            <div className="rounded-3xl border border-line bg-surface p-5">
+              <div className="flex items-center gap-2">
+                <Radio className="w-4 h-4 text-emerald-500 shrink-0" />
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                  {language === "zh" ? "实时数据层 · 三块都是真实外部数据" : "Live Data Layer · all three panels are real external feeds"}
+                </h2>
+              </div>
               <p className="text-xs text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
                 {language === "zh"
                   ? "这一页与上方演示数据集无关：港口气象与海况来自 Open-Meteo，咽喉点过境量来自 IMF PortWatch 官方统计，近岸船位来自开放 AIS 接口。三者都免费、免密钥、浏览器可直连，因此纯静态托管也能跑出真实数据。"
@@ -732,6 +741,11 @@ export default function App() {
                 {language === "zh"
                   ? "界面上每块面板都自带来源与覆盖范围标注——数据从哪里来、覆盖到哪、哪里接不上，都写在面板底部。"
                   : "Every panel captions its own source and extent at the foot of the card — where the data comes from, how far it reaches, and where it stops."}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                {language === "zh"
+                  ? "取不到网时（离线预览、受限沙箱或出口被拦截），面板会回落到构建期缓存快照，并在标题旁标出「缓存快照 + 时间」。既不会把旧数字冒充实时，也不会变成一张空白卡片。"
+                  : "When the network is unreachable — offline preview, restricted sandbox, blocked egress — each panel falls back to its build-time snapshot and labels itself \u201ccached + timestamp\u201d beside the title. It never poses as live, and it never renders blank."}
               </p>
             </div>
 
@@ -845,7 +859,7 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-8 mt-16 bg-white/50 dark:bg-slate-900/50">
+      <footer className="border-t border-line py-8 mt-16 bg-surface/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-2">
             <Ship className="w-4 h-4 text-blue-500" />

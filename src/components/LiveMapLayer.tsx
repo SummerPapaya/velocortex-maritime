@@ -74,25 +74,34 @@ export const LiveMapLayer: React.FC<Props> = ({
    * Markers and labels are drawn in viewBox units, but they have to stay a
    * constant size on screen — otherwise the 3600-unit world map squashes every
    * label down to ~5px, and zooming to the Baltic blows them up to 20px. So
-   * measure the rendered width and derive "how many viewBox units is one CSS
+   * measure the drawing area and derive "how many viewBox units is one CSS
    * pixel"; every non-geographic dimension is then expressed in pixels.
+   *
+   * Height is measured as well as width because the frame is matched to the
+   * container's aspect ratio (see `view`), which is what lets the map fill the
+   * pane instead of letterboxing inside it.
    */
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const [pxWidth, setPxWidth] = useState(1080);
+  const [pxHeight, setPxHeight] = useState(420);
 
   useEffect(() => {
-    const el = wrapRef.current;
+    const el = canvasRef.current;
     if (!el) return;
+    const measure = (w: number, h: number) => {
+      if (w > 0) setPxWidth(w);
+      if (h > 0) setPxHeight(h);
+    };
     if (typeof ResizeObserver === "undefined") {
-      setPxWidth(el.clientWidth || 1080);
+      measure(el.clientWidth, el.clientHeight);
       return;
     }
     const ro = new ResizeObserver((entries) => {
-      const w = entries[0]?.contentRect?.width;
-      if (w && w > 0) setPxWidth(w);
+      const box = entries[0]?.contentRect;
+      if (box) measure(box.width, box.height);
     });
     ro.observe(el);
-    if (el.clientWidth) setPxWidth(el.clientWidth);
+    measure(el.clientWidth, el.clientHeight);
     return () => ro.disconnect();
   }, []);
 
@@ -108,13 +117,43 @@ export const LiveMapLayer: React.FC<Props> = ({
       if (w < MIN_SPAN) { const d = (MIN_SPAN - w) / 2; x -= d; w = MIN_SPAN; }
       if (h < MIN_SPAN * 0.6) { const d = (MIN_SPAN * 0.6 - h) / 2; y -= d; h = MIN_SPAN * 0.6; }
       const padX = w * 0.12, padY = h * 0.12;
-      return { x: x - padX, y: y - padY, w: w + padX * 2, h: h + padY * 2 };
+      let frame = { x: x - padX, y: y - padY, w: w + padX * 2, h: h + padY * 2 };
+
+      /*
+       * A framed basin is nearly square while the pane is tall, so `meet` would
+       * centre a small map in a lot of empty card. Match the frame to the pane's
+       * aspect instead — the frame then shows *more* of the surrounding sea and
+       * coast rather than blank space, and the scale stays uniform.
+       */
+      const boxAspect = pxWidth / Math.max(pxHeight, 1);
+      if (boxAspect > 0.05 && Number.isFinite(boxAspect)) {
+        const viewAspect = frame.w / frame.h;
+        const grown = { ...frame };
+        if (viewAspect > boxAspect) {
+          grown.h = frame.w / boxAspect;
+          grown.y = frame.y - (grown.h - frame.h) / 2;
+        } else {
+          grown.w = frame.h * boxAspect;
+          grown.x = frame.x - (grown.w - frame.w) / 2;
+        }
+        // Outside the projected world there is no coastline to draw, so an
+        // expansion that leaves it would be showing invented ocean.
+        const inside =
+          grown.x >= 0 && grown.y >= 0 && grown.x + grown.w <= VW && grown.y + grown.h <= VH;
+        if (inside) frame = grown;
+      }
+      return frame;
     }
     return { x: 0, y: 0, w: VW, h: VH };
-  }, [tab, zoomed, ais]);
+  }, [tab, zoomed, ais, pxWidth, pxHeight]);
 
-  /** viewBox units per CSS pixel — the conversion for every screen-sized feature. */
-  const u = view.w / Math.max(pxWidth, 1);
+  /**
+   * viewBox units per CSS pixel. With `meet` the drawing is scaled by
+   * min(pxW/viewW, pxH/viewH), so the unit-per-pixel figure is the reciprocal —
+   * the larger ratio. Taking the max keeps labels right-sized whether the map is
+   * fitted by width or by height.
+   */
+  const u = Math.max(view.w / Math.max(pxWidth, 1), view.h / Math.max(pxHeight, 1));
   const px = useCallback((n: number) => n * u, [u]);
 
   const marks = useMemo<Mark[]>(() => {
@@ -212,10 +251,7 @@ export const LiveMapLayer: React.FC<Props> = ({
   };
 
   return (
-    <div
-      ref={wrapRef}
-      className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 overflow-hidden"
-    >
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface">
       {tab === "vessels" && !zoomed && (
         <div className="flex items-start gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-300/60 dark:border-amber-800/60">
           <Info className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
@@ -226,7 +262,7 @@ export const LiveMapLayer: React.FC<Props> = ({
           </p>
         </div>
       )}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-slate-200/80 dark:border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-line">
         <div className="flex items-center gap-2 min-w-0">
           <Globe2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <span className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
@@ -262,28 +298,35 @@ export const LiveMapLayer: React.FC<Props> = ({
         </div>
       </div>
 
+      {/*
+        The drawing area, not the card, owns the measured box: the frame is
+        matched to *this* aspect ratio, and its background is the sea colour, so
+        whatever the SVG does not cover reads as open water rather than as a gap
+        in the card.
+      */}
+      <div ref={canvasRef} className="relative min-h-[170px] flex-1 bg-sea">
       <svg
         viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
-        className="w-full h-auto"
+        className="h-full w-full"
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label={zh ? "实时数据地图层" : "Live data map layer"}
       >
         {/* Sea */}
-        <rect x={view.x} y={view.y} width={view.w} height={view.h} className="fill-sky-50 dark:fill-slate-950" />
+        <rect x={view.x} y={view.y} width={view.w} height={view.h} className="fill-sea" />
 
         {/* Land — real Natural Earth outline, inlined so the map never needs a tile server */}
         <path
           d={WORLD_LAND_PATH}
-          className="fill-slate-200/90 dark:fill-slate-800/90 stroke-slate-300 dark:stroke-slate-700"
+          className="fill-land stroke-land-line"
           strokeWidth={px(0.8)}
         />
 
         {/* Equator, as a quiet orientation cue */}
         {(() => { const { y } = projectLonLat(0, 0); return (
           <line x1={view.x} x2={view.x + view.w} y1={y} y2={y}
-                className="stroke-slate-300/60 dark:stroke-slate-700/60"
-                strokeDasharray={`${px(4)} ${px(5)}`} strokeWidth={px(0.8)} />
+                className="stroke-line-strong"
+                strokeDasharray={`${px(4)} ${px(5)}`} strokeWidth={px(0.8)} opacity={0.8} />
         ); })()}
 
         {/*
@@ -388,6 +431,7 @@ export const LiveMapLayer: React.FC<Props> = ({
           );
         })}
       </svg>
+      </div>
 
       {/*
         Coverage scope, stated rather than implied.
@@ -401,7 +445,7 @@ export const LiveMapLayer: React.FC<Props> = ({
         cannot hear, so a reader must not mistake silence for an empty sea.
       */}
       {tab === "vessels" && (
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2.5 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2.5 border-t border-line">
           <span
             className="inline-flex items-center gap-1.5 text-[10px]"
             title={
@@ -448,7 +492,7 @@ export const LiveMapLayer: React.FC<Props> = ({
       )}
 
       {/* Provenance strip: every mark on this canvas, named at the point of use */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2 border-t border-slate-200/80 dark:border-slate-800 text-[10px] font-mono text-slate-400">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2 border-t border-line text-[10px] font-mono text-slate-400">
         <span className="inline-flex items-center gap-1">
           <Maximize2 className="w-3 h-3" />
           {tab === "vessels" && zoomed && ais?.bbox

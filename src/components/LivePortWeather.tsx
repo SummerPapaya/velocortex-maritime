@@ -24,6 +24,7 @@ import {
   type PortWeather,
   type PortWeatherSnapshot,
 } from "../services/weather";
+import { FeedBadge, FeedNotice } from "./FeedBadge";
 
 const AUTO_REFRESH_MS = 10 * 60 * 1000;
 
@@ -70,7 +71,7 @@ const PortTile: React.FC<{ port: PortWeather; lang: "en" | "zh" }> = ({ port, la
   const wavePct = Math.min(100, ((port.waveM ?? 0) / 5) * 100);
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4 space-y-3">
+    <div className="rounded-2xl border border-line bg-surface-2 p-4 space-y-3">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -197,8 +198,8 @@ export const LivePortWeather: React.FC<{ onSnapshot?: (s: PortWeatherSnapshot | 
     : "--:--:--";
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-cyan-500/30 shadow-sm space-y-5">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+    <section className="bg-surface rounded-3xl p-6 border border-line shadow-sm space-y-5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-line pb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0">
             <CloudSun className="w-5 h-5" />
@@ -206,10 +207,10 @@ export const LivePortWeather: React.FC<{ onSnapshot?: (s: PortWeatherSnapshot | 
           <div>
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === "zh" ? "全球枢纽港 · 实时气象与海况" : "Global Hub Ports · Live Weather & Sea State"}</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300/70 dark:border-emerald-800/70 inline-flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                LIVE
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-line bg-surface-2 text-slate-600 dark:text-slate-300">
+                Open-Meteo
               </span>
+              {snapshot && <FeedBadge feed={snapshot.feed} lang={lang} />}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {lang === "zh"
@@ -257,30 +258,33 @@ export const LivePortWeather: React.FC<{ onSnapshot?: (s: PortWeatherSnapshot | 
         </div>
       </div>
 
+      {/*
+        Only reachable when the provider and the bundled snapshot both fail.
+      */}
       {failed && (
         <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300/70 dark:border-amber-800/70">
           <WifiOff className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-800 dark:text-amber-200 space-y-1">
             <p className="font-bold">
-              {lang === "zh"
-                ? "实时气象暂不可用（离线预览或网络受限）"
-                : "Live weather unavailable (offline preview or network restricted)"}
+              {lang === "zh" ? "实时气象与本地快照均不可用" : "Neither Open-Meteo nor the bundled snapshot could be read"}
             </p>
             <p className="text-amber-700/90 dark:text-amber-300/90">
               {lang === "zh"
-                ? "本模块依赖 Open-Meteo 在线接口；其余演示数据集照常显示，不受影响。"
-                : "This module depends on the online Open-Meteo APIs; the rest of the demo dataset renders unaffected."}
+                ? "本模块优先取 Open-Meteo 在线接口，失败时回落到构建期快照；两者都读不到时才会显示这条提示。"
+                : "This module prefers the online Open-Meteo APIs and falls back to a build-time snapshot; this notice only appears when both are unreadable."}
             </p>
           </div>
         </div>
       )}
+
+      {snapshot && <FeedNotice feed={snapshot.feed} lang={lang} />}
 
       {loading && !snapshot ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4 h-[186px] animate-pulse"
+              className="rounded-2xl border border-line bg-surface-2 p-4 h-[186px] animate-pulse"
             />
           ))}
         </div>
