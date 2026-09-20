@@ -1,0 +1,20 @@
+name = "velocortex-ais-proxy"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Collect a snapshot every 5 minutes. Free-plan accounts get 5 cron triggers.
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Create with: wrangler kv namespace create AIS_KV
+[[kv_namespaces]]
+binding = "AIS_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+[vars]
+# Keep this to a single corridor: the free-plan CPU budget is the binding
+# constraint, not the AIS subscription.
+BBOX = "1.0,102.0,7.5,105.0"
+
+# AISSTREAM_API_KEY is a secret, not a var:
+#   wrangler secret put AISSTREAM_API_KEY

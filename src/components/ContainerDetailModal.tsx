@@ -518,7 +518,7 @@ export const ContainerDetailModal: React.FC<ContainerDetailModalProps> = ({ cont
         {/* Footer actions */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 flex items-center justify-between">
           <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-            Container ID: <span className="font-mono text-slate-700 dark:text-slate-300">{container.containerNumber}</span> • Last telemetry sync: {container.telemetry.lastUpdated}
+            Container ID: <span className="font-mono text-slate-700 dark:text-slate-300">{container.containerNumber}</span> • Sample data timestamp: {container.telemetry.lastUpdated}
           </div>
           <button
             onClick={onClose}

@@ -155,7 +155,7 @@ export const RouteHeatmapView: React.FC<RouteHeatmapViewProps> = ({
             {isZh ? "主要海运走廊与多式联运通道拥堵深度分析" : "Major Trade Route Congestion Analysis"}
           </h2>
           <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            {isZh ? "实时监测全球各大海事通道的船舶航行密度、码头靠泊平均排队时效及地缘政治摩擦风险。借助 Gemini AI 预测下游滞退时效，并智能推荐跨大洲多式联运替代分流路线。" : "Monitor real-time vessel density, average port dwell times, and geopolitical friction across primary oceanic logistics corridors. Leverage Gemini AI to predict downstream delays and recommend intermodal diversions."}
+            {isZh ? "展示各主要海运通道的样例船舶密度、码头靠泊平均排队时效及地缘政治摩擦风险；下方为示意性的下行延误预测与多式联运分流建议。" : "Explore sample vessel density, average port dwell times, and geopolitical friction across primary oceanic logistics corridors. Illustrative model output predicts downstream delays and recommends intermodal diversions."}
           </p>
         </div>
 

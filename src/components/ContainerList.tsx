@@ -58,7 +58,7 @@ const DEFAULT_NEW_CONTAINER: ShippingContainer = {
     shockEvents: 0,
     doorStatus: "SEALED",
     signalStrength: "Satellite (Iridium)",
-    lastUpdated: "Just now",
+    lastUpdated: "2026-08-14 09:20 UTC",
     tempHistory: [
       { time: "00:00", temp: -18.0, humidity: 42 },
       { time: "06:00", temp: -18.1, humidity: 42 },

@@ -13,6 +13,11 @@ import { RouteHeatmapView } from "./components/RouteHeatmapView";
 import { AlertsDashboard } from "./components/AlertsDashboard";
 import { ArchitectureModal } from "./components/ArchitectureModal";
 import { BulkLookupAudit } from "./components/BulkLookupAudit";
+import { DemoDataBanner } from "./components/DemoDataBanner";
+import { LivePortWeather } from "./components/LivePortWeather";
+import { ChokepointBoard } from "./components/ChokepointBoard";
+import { NearshoreAis } from "./components/NearshoreAis";
+import { DEMO_BASELINE_LABEL, DEMO_BUILD_LABEL } from "./data/demoMeta";
 import { 
   MOCK_CONTAINERS, 
   MOCK_ROUTES, 
@@ -50,7 +55,7 @@ import { useLanguage } from "./context/LanguageContext";
 
 export default function App() {
   const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<"dashboard" | "containers" | "heatmap" | "alerts" | "architecture" | "bulk_audit">("dashboard");
+  const [activeTab, setActiveTab] = useState<"live" | "dashboard" | "containers" | "heatmap" | "alerts" | "architecture" | "bulk_audit">("dashboard");
   const [dashboardLayout, setDashboardLayout] = useState<"STANDARD" | "SPLIT_DESK" | "BENTO_GRID" | "CINEMATIC_HUD">("STANDARD");
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -74,10 +79,15 @@ export default function App() {
     }
   }, [darkMode]);
 
-  // Simulate satellite IoT telemetry sync
+  // Re-roll the frozen sample set. This touches ONLY demo values — it does not
+  // contact any carrier, IoT or AIS endpoint, and the UI says so.
   const handleRefreshTelemetry = () => {
     setIsRefreshing(true);
-    setNotificationToast("Syncing satellite IoT gateways (Iridium constellation & 4G LTE towers)...");
+    setNotificationToast(
+      language === "zh"
+        ? `正在重算演示数据集（数据基准 ${DEMO_BASELINE_LABEL}）…`
+        : `Re-rolling the demo dataset (baseline ${DEMO_BASELINE_LABEL})…`
+    );
 
     setTimeout(() => {
       // Slightly fluctuate temperatures and progress
@@ -92,13 +102,17 @@ export default function App() {
           telemetry: {
             ...c.telemetry,
             temperature: newTemp,
-            lastUpdated: "Just now"
+            lastUpdated: DEMO_BASELINE_LABEL
           }
         };
       }));
 
       setIsRefreshing(false);
-      setNotificationToast("Telemetry successfully synchronized across 1,420 containers!");
+      setNotificationToast(
+        language === "zh"
+          ? "演示数据已重算（样例值，非实时遥测）。实时港口气象请见「全球枢纽港 · 实时气象与海况」卡片。"
+          : "Demo values re-rolled (sample data, not live telemetry). See the Live Port Weather card for real-time data."
+      );
       setTimeout(() => setNotificationToast(null), 4000);
     }, 1200);
   };
@@ -190,6 +204,9 @@ export default function App() {
       {/* Main Container Workspace */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         
+        {/* Data provenance disclosure — always visible, on every tab */}
+        <DemoDataBanner />
+
         {/* Stakeholder Metric Summary Cards (Visible on Standard/Split layouts & containers) */}
         {((activeTab === "dashboard" && (dashboardLayout === "STANDARD" || dashboardLayout === "SPLIT_DESK")) || activeTab === "containers") && (
           <MetricCards 
@@ -320,7 +337,8 @@ export default function App() {
                             onClick={() => setSelectedContainer(container)}
                             className="py-3.5 flex items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 px-3 rounded-2xl cursor-pointer transition-colors"
                           >
-                            <div className="flex items-center gap-3">
+                            {/* min-w-0：让左侧内容可收缩，否则右侧 shrink-0 的状态块会被挤出卡片 */}
+                            <div className="flex items-center gap-3 min-w-0">
                               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 font-bold text-xs ${
                                 isExcursion ? "bg-red-500/20 text-red-500" :
                                 container.status === "PORT_CONGESTION" ? "bg-amber-500/20 text-amber-500" :
@@ -328,7 +346,7 @@ export default function App() {
                               }`}>
                                 <Ship className="w-5 h-5" />
                               </div>
-                              <div>
+                              <div className="min-w-0">
                                 <div className="flex items-center gap-2">
                                   <span className="font-mono font-bold text-sm text-slate-900 dark:text-white">
                                     {container.containerNumber}
@@ -372,11 +390,11 @@ export default function App() {
                       <div className="flex items-center gap-2 mb-3">
                         <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
                         <span className="text-xs font-bold uppercase tracking-wider text-indigo-300">
-                          {language === "zh" ? "Gemini AI 智慧供应链决策引擎" : "Gemini AI Supply Chain Intelligence"}
+                          {language === "zh" ? "Gemini AI 智慧供应链决策引擎（样例输出）" : "Gemini AI Supply Chain Intelligence (sample output)"}
                         </span>
                       </div>
                       <h4 className="text-base font-bold text-white">
-                        {language === "zh" ? "航线与成本优化实时诊断" : "Live Route & Cost Optimization Summary"}
+                        {language === "zh" ? "航线与成本优化样例诊断" : "Sample Route & Cost Optimization Summary"}
                       </h4>
                       <p className="text-xs text-slate-300 mt-2 leading-relaxed">
                         {language === "zh" ? (
@@ -516,6 +534,7 @@ export default function App() {
                       ))}
                     </div>
                   </div>
+
                 </div>
               </div>
             )}
@@ -541,9 +560,9 @@ export default function App() {
                     <p className="text-xs text-slate-300 mt-1">Average diversion penalty via Cape of Good Hope</p>
                   </div>
                   <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 p-5 rounded-3xl border border-indigo-500/30 shadow-md">
-                    <span className="text-[10px] uppercase font-bold text-indigo-400 block">AIS Telemetry Pulse</span>
-                    <h3 className="text-2xl font-extrabold text-white font-mono mt-1">Zero-Trust Lock</h3>
-                    <p className="text-xs text-slate-300 mt-1">2,840 satellite handshakes / min</p>
+                    <span className="text-[10px] uppercase font-bold text-indigo-400 block">Demo Data Cut-off</span>
+                    <h3 className="text-2xl font-extrabold text-white font-mono mt-1">{DEMO_BUILD_LABEL}</h3>
+                    <p className="text-xs text-slate-300 mt-1">Frozen sample values · no live AIS handshake</p>
                   </div>
                 </div>
 
@@ -624,13 +643,13 @@ export default function App() {
                         Geospatial Mission Control • NASA / Maritime Ops Mode
                       </span>
                       <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                        Live Global AIS Fleet & Corridor HUD
+                        {language === "zh" ? "全球船队与通道演示数据集" : "Global Fleet & Corridor Demo Dataset"}
                       </h2>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-700">
-                      🛰️ AIS SATELLITE LINK: ACTIVE
+                      🛰️ DEMO FEED · NO LIVE AIS
                     </span>
                     <button
                       onClick={() => setDashboardLayout("STANDARD")}
@@ -644,9 +663,9 @@ export default function App() {
                 {/* HUD Floating Glass Strip over Map */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="bg-slate-900/90 border border-indigo-500/40 p-4 rounded-2xl backdrop-blur-md">
-                    <span className="text-[10px] text-slate-400 font-mono uppercase block">Total Fleet Tracked</span>
+                    <span className="text-[10px] text-slate-400 font-mono uppercase block">Sample Records In Dataset</span>
                     <span className="text-xl font-mono font-bold text-white">1,420 Containers</span>
-                    <span className="text-[10px] text-emerald-400 font-bold ml-2">▲ 100% AIS Lock</span>
+                    <span className="text-[10px] text-amber-400 font-bold ml-2">▲ Demo baseline 2026-08-14</span>
                   </div>
                   <div className="bg-slate-900/90 border border-amber-500/40 p-4 rounded-2xl backdrop-blur-md">
                     <span className="text-[10px] text-slate-400 font-mono uppercase block">Active Alert Diversions</span>
@@ -687,6 +706,35 @@ export default function App() {
               </div>
             )}
 
+            {/* Live feeds live exclusively on the Live Data tab — rendering the
+                port-weather board here as well duplicated the same panel, so the
+                provenance discussion and the data now sit in one place. */}
+
+          </div>
+        )}
+
+        {/* TAB 1.5: LIVE DATA — every panel on this tab is a real external feed */}
+        {activeTab === "live" && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-cyan-950/30 p-5">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                {language === "zh" ? "实时数据层 · 三块都是真实外部数据" : "Live Data Layer · all three panels are real external feeds"}
+              </h2>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
+                {language === "zh"
+                  ? "这一页与上方演示数据集无关：港口气象与海况来自 Open-Meteo，咽喉点过境量来自 IMF PortWatch 官方统计，近岸船位来自开放 AIS 接口。三者都免费、免密钥、浏览器可直连，因此纯静态托管也能跑出真实数据。"
+                  : "This tab is independent of the demo dataset: port weather comes from Open-Meteo, chokepoint transit volumes from IMF PortWatch official statistics, and nearshore positions from an open AIS feed. All three are free, key-less and browser-direct, which is how a purely static host still serves real data."}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                {language === "zh"
+                  ? "界面上每块面板都自带来源与覆盖范围标注——数据从哪里来、覆盖到哪、哪里接不上，都写在面板底部。"
+                  : "Every panel captions its own source and extent at the foot of the card — where the data comes from, how far it reaches, and where it stops."}
+              </p>
+            </div>
+
+            <ChokepointBoard />
+            <NearshoreAis />
+            <LivePortWeather />
           </div>
         )}
 
@@ -801,7 +849,11 @@ export default function App() {
           <div className="flex items-center gap-2">
             <Ship className="w-4 h-4 text-blue-500" />
             <span className="font-bold text-slate-700 dark:text-slate-300">{language === "zh" ? "VeloCortex 企业级物联网物流引擎" : "VeloCortex Enterprise IoT Logistics Engine"}</span>
-            <span>• Powered by Google Gemini 3.6-Flash & Zero-Trust Telemetry</span>
+            <span>
+              {language === "zh"
+                ? "• 演示构建：AI 建议文案为构建期样例，不调用在线模型；真实实时数据见「实时数据」标签页（Open-Meteo 气象 / IMF PortWatch 过境量 / 开放 AIS 船位，均免密钥）"
+                : "• Demo build: AI advisory text is baked in at build time, no live model call; the real live feeds sit on the Live Data tab (Open-Meteo weather, IMF PortWatch transits, open AIS positions — all key-less)"}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <button onClick={() => setActiveTab("architecture")} className="hover:text-blue-500 transition-colors">
@@ -810,7 +862,7 @@ export default function App() {
             <button onClick={() => setActiveTab("heatmap")} className="hover:text-blue-500 transition-colors">
               Route Heatmaps
             </button>
-            <span>v2.5 (Update 2026.09)</span>
+            <span>{language === "zh" ? `v2.5（演示构建 ${DEMO_BUILD_LABEL}）` : `v2.5 (demo build ${DEMO_BUILD_LABEL})`}</span>
           </div>
         </div>
       </footer>

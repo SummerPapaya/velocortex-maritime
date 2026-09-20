@@ -113,7 +113,7 @@ export const AlertsDashboard: React.FC<AlertsDashboardProps> = ({
             {isZh ? "滞期费 (Demurrage) 与冷链货损风险管控台" : "Demurrage & Spoilage Prevention Dashboard"}
           </h2>
           <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            {isZh ? "基于物联网 IoT 异常实时遥测，在触发港口滞期费阈值或医药温度失控前自动触发多方预警。Gemini AI 持续评估码头拥堵与海关查验排队时长，智能推荐即时降本改道方案。" : "Real-time IoT anomaly detection triggers automated stakeholder notifications before demurrage thresholds or thermal degradation occur. Gemini AI continuously evaluates port congestion and customs holds to recommend immediate cost-saving diversions."}
+            {isZh ? "演示叙述：IoT 异常遥测可在触及港口滞期费阈值或医药温度失控前触发多方预警；模型评估码头拥堵与海关查验排队时长，给出降本改道建议。" : "Demo narrative: IoT anomaly detection would trigger automated stakeholder notifications before demurrage thresholds or thermal degradation occur, with a model evaluating port congestion and customs holds to recommend cost-saving diversions."}
           </p>
         </div>
 
@@ -187,6 +187,11 @@ export const AlertsDashboard: React.FC<AlertsDashboardProps> = ({
             </AreaChart>
           </ResponsiveContainer>
         </div>
+        <p className="mt-3 text-[11px] leading-relaxed text-slate-500 dark:text-slate-400 italic">
+          {isZh
+            ? "演示固定值：本图与上方 28.45 万美元节省额均为预设样例，并非由建议动作反算。滞期费敞口另有两套口径（AI 估计值 / 按状态固定值），详见页面顶部「数据说明」。行业参考区间：干箱 150–350、冷箱 400–850 美元/箱/天。"
+            : "Fixed demo values: this chart and the US$284,500 saved above are preset samples, not back-calculated from the recommended actions. Demurrage exposure has two other bases (AI estimate / status-mapped constant) — see the Data provenance panel at the top. Industry reference bands: US$150–350 dry, US$400–850 reefer per container/day."}
+        </p>
       </div>
 
       {/* Automated Alerts List Section */}

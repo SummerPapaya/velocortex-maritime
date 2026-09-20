@@ -120,7 +120,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
         location: `${origCity} Berth 4`,
         timestamp: "2026-09-14 14:15 UTC",
         status: "COMPLETED",
-        details: "Loaded onto carrier deck. AIS transponder satellite handshake confirmed."
+        details: "Loaded onto carrier deck. Sample milestone generated from the demo dataset."
       },
       {
         id: "m3",
@@ -277,7 +277,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
             targetTemp: targetTemp,
             humidity: 55 + (index % 10),
             batteryPercent: 88 - (index % 15),
-            lastUpdated: "Just Now (AIS Satellite Lock)"
+            lastUpdated: "Baseline 2026-08-14 09:20 UTC"
           },
           demurrageRiskUsd: demurrage,
           milestones: generateMilestones(assignedStatus, orig, dest),
@@ -285,7 +285,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
             ? "CRITICAL: Reefer compressor variance detected. AI automated dispatch sent to vessel engineering crew for immediate reset."
             : assignedStatus === "PORT_CONGESTION"
             ? "Berth delay outside destination port. Recommend switching chassis pickup window by +36 hours to avoid storage penalties."
-            : "Live IoT transponder verified. Vessel proceeding on critical path with 99.4% on-time confidence.",
+            : "Sample manifest matched against the demo dataset. No carrier EDI or AIS query was performed.",
           isRealContainer: false
         };
       });
@@ -433,7 +433,7 @@ export const BulkLookupAudit: React.FC<BulkLookupAuditProps> = ({
               </span>
               <span className="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Real-Time EDI & AIS Satellite Resolution
+                Sample EDI & AIS Resolution Workflow
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2.5">

@@ -34,7 +34,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       shockEvents: 1,
       doorStatus: "SEALED",
       signalStrength: "Satellite (Iridium)",
-      lastUpdated: "2 mins ago",
+      lastUpdated: "2026-08-14 09:18 UTC",
       tempHistory: [
         { time: "00:00", temp: -20.1, humidity: 40 },
         { time: "04:00", temp: -20.0, humidity: 41 },
@@ -90,7 +90,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       shockEvents: 0,
       doorStatus: "SEALED",
       signalStrength: "Satellite (Iridium)",
-      lastUpdated: "5 mins ago",
+      lastUpdated: "2026-08-14 09:15 UTC",
       tempHistory: [
         { time: "00:00", temp: 21.8, humidity: 54 },
         { time: "04:00", temp: 22.0, humidity: 55 },
@@ -145,7 +145,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       shockEvents: 0,
       doorStatus: "SEALED",
       signalStrength: "Satellite (Iridium)",
-      lastUpdated: "1 min ago",
+      lastUpdated: "2026-08-14 09:19 UTC",
       tempHistory: [
         { time: "00:00", temp: 18.2, humidity: 48 },
         { time: "04:00", temp: 18.3, humidity: 48 },
@@ -199,7 +199,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       shockEvents: 2, // Minor turbulence reported
       doorStatus: "SEALED",
       signalStrength: "4G LTE",
-      lastUpdated: "Just now",
+      lastUpdated: "2026-08-14 09:20 UTC",
       tempHistory: [
         { time: "00:00", temp: 19.5, humidity: 39 },
         { time: "04:00", temp: 19.6, humidity: 38 },
@@ -254,7 +254,7 @@ export const MOCK_CONTAINERS: ShippingContainer[] = [
       shockEvents: 0,
       doorStatus: "SEALED",
       signalStrength: "4G LTE",
-      lastUpdated: "Just now",
+      lastUpdated: "2026-08-14 09:20 UTC",
       tempHistory: [
         { time: "00:00", temp: -22.0, humidity: 40 },
         { time: "04:00", temp: -22.1, humidity: 40 },

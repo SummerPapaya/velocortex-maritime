@@ -106,7 +106,7 @@ export const GlobalTradeMap: React.FC<GlobalTradeMapProps> = ({
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2 mt-1">
-            {isZh ? "实时全球 AIS 卫星与海事地理通道大屏" : "Live Global AIS & Maritime Chokepoint Map"}
+            {isZh ? "全球海事地理通道演示图" : "Global Maritime Chokepoint Demo Map"}
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl leading-relaxed">
             {isZh ? "直观清晰的大陆板块轮廓与主要大洋航线，帮助调度中心秒级识别全球港口拥堵、红海安全改道与码头排队泊位时效。" : "Recognizable continental outlines and oceanic corridors make identifying major trade bottlenecks, Red Sea security rerouting, and terminal delays instantaneous."}

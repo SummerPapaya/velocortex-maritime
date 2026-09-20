@@ -124,6 +124,15 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ sections }
           </p>
         </div>
 
+        {/* Scope disclosure: this is the target design, not the running demo */}
+        <div className="mt-5 rounded-2xl border border-amber-400/50 bg-amber-500/10 px-4 py-3 relative z-10">
+          <p className="text-[11px] leading-relaxed text-amber-100">
+            {isZh
+              ? "说明：以下为 VeloCortex 的「目标生产架构」设计规格（参考架构）。本次部署的演示版并未实现该架构 —— 演示版为纯静态前端，数据来自构建期样例集；真实实时数据集中在「实时数据」标签页的三块面板（Open-Meteo 港口气象、IMF PortWatch 咽喉点过境量、开放 AIS 船位）。"
+              : "Note: the specifications below describe VeloCortex's intended production architecture (reference design). The deployed demo does not implement it — the demo is a static front end running on a build-time sample set, with the real live feeds confined to the three panels on the Live Data tab (Open-Meteo port weather, IMF PortWatch chokepoint transits, open AIS positions)."}
+          </p>
+        </div>
+
         {/* Quick architecture diagram pills */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-indigo-500/20 relative z-10 text-center font-mono text-xs">
           <div className="bg-indigo-900/40 p-3 rounded-2xl border border-indigo-500/30">
