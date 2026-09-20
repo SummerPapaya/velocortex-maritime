@@ -10,7 +10,8 @@
     "start": "node dist/server.cjs",
     "preview": "vite preview",
     "clean": "rm -rf dist server.cjs",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "gen:map": "node scripts/build-world-map.mjs src/data/worldMap.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
