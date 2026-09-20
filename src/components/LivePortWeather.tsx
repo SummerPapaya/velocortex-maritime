@@ -150,7 +150,7 @@ const PortTile: React.FC<{ port: PortWeather; lang: "en" | "zh" }> = ({ port, la
   );
 };
 
-export const LivePortWeather: React.FC = () => {
+export const LivePortWeather: React.FC<{ onSnapshot?: (s: PortWeatherSnapshot | null) => void }> = ({ onSnapshot }) => {
   const { language } = useLanguage();
   const lang = language;
   const [snapshot, setSnapshot] = useState<PortWeatherSnapshot | null>(null);
@@ -182,6 +182,9 @@ export const LivePortWeather: React.FC = () => {
       window.clearInterval(timer);
     };
   }, [load]);
+
+  // Hand the snapshot up so the shared map layer can plot the port markers
+  useEffect(() => { onSnapshot?.(snapshot); }, [snapshot, onSnapshot]);
 
   const sorted = useMemo(() => {
     if (!snapshot) return [];

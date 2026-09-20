@@ -14,9 +14,7 @@ import { AlertsDashboard } from "./components/AlertsDashboard";
 import { ArchitectureModal } from "./components/ArchitectureModal";
 import { BulkLookupAudit } from "./components/BulkLookupAudit";
 import { DemoDataBanner } from "./components/DemoDataBanner";
-import { LivePortWeather } from "./components/LivePortWeather";
-import { ChokepointBoard } from "./components/ChokepointBoard";
-import { NearshoreAis } from "./components/NearshoreAis";
+import { LiveDataHub } from "./components/LiveDataHub";
 import { DEMO_BASELINE_LABEL, DEMO_BUILD_LABEL } from "./data/demoMeta";
 import { 
   MOCK_CONTAINERS, 
@@ -727,14 +725,17 @@ export default function App() {
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
                 {language === "zh"
+                  ? "三块数据源共用同一张世界地图：切换数据层按钮会同时换掉地图上的标记与下方的表格——咽喉点画成面积正比于过境量的圆、按各自常态着色，船位叠在真实海岸线上，枢纽港按实时风浪分级。"
+                  : "All three feeds share one world map: the layer buttons swap both the marks on the map and the table beneath it — chokepoints as circles sized by transit volume and coloured against their own norm, vessel positions laid over real coastlines, and hub ports graded by live wind and sea state."}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                {language === "zh"
                   ? "界面上每块面板都自带来源与覆盖范围标注——数据从哪里来、覆盖到哪、哪里接不上，都写在面板底部。"
                   : "Every panel captions its own source and extent at the foot of the card — where the data comes from, how far it reaches, and where it stops."}
               </p>
             </div>
 
-            <ChokepointBoard />
-            <NearshoreAis />
-            <LivePortWeather />
+            <LiveDataHub />
           </div>
         )}
 

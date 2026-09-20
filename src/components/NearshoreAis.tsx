@@ -77,22 +77,8 @@ const COMMERCIAL_AIS_VENDORS = [
 ];
 
 /** Equirectangular projection with a latitude correction so the basin is not stretched. */
-function project(
-  lat: number,
-  lon: number,
-  bbox: NonNullable<AisSnapshot["bbox"]>,
-  width: number,
-  height: number,
-): { x: number; y: number } {
-  const spanLon = bbox.maxLon - bbox.minLon || 1;
-  const spanLat = bbox.maxLat - bbox.minLat || 1;
-  return {
-    x: ((lon - bbox.minLon) / spanLon) * width,
-    y: height - ((lat - bbox.minLat) / spanLat) * height,
-  };
-}
 
-export const NearshoreAis: React.FC = () => {
+export const NearshoreAis: React.FC<{ onSnapshot?: (s: AisSnapshot | null) => void }> = ({ onSnapshot }) => {
   const { language } = useLanguage();
   const lang = language;
   const [snapshot, setSnapshot] = useState<AisSnapshot | null>(null);
@@ -125,32 +111,15 @@ export const NearshoreAis: React.FC = () => {
     };
   }, [load]);
 
+  // Hand the snapshot up so the shared map layer can plot the positions
+  useEffect(() => { onSnapshot?.(snapshot); }, [snapshot, onSnapshot]);
+
   const movers = useMemo(() => {
     if (!snapshot) return [];
     return [...snapshot.vessels]
       .filter((v) => (v.sog ?? 0) >= 3)
       .sort((a, b) => (b.sog ?? 0) - (a.sog ?? 0))
       .slice(0, 8);
-  }, [snapshot]);
-
-  const chart = useMemo(() => {
-    if (!snapshot?.bbox) return null;
-    const width = 480;
-    const raw = snapshot.bbox;
-    // Inset by 4% so the outermost hulls are not clipped in half by the frame.
-    const latPad = (raw.maxLat - raw.minLat) * 0.04 || 0.1;
-    const lonPad = (raw.maxLon - raw.minLon) * 0.04 || 0.1;
-    const bbox = {
-      minLat: raw.minLat - latPad,
-      maxLat: raw.maxLat + latPad,
-      minLon: raw.minLon - lonPad,
-      maxLon: raw.maxLon + lonPad,
-    };
-    const midLat = (bbox.minLat + bbox.maxLat) / 2;
-    const spanLon = Math.max((bbox.maxLon - bbox.minLon) * Math.cos((midLat * Math.PI) / 180), 0.001);
-    const spanLat = Math.max(bbox.maxLat - bbox.minLat, 0.001);
-    const height = Math.round(Math.min(300, Math.max(150, (width * spanLat) / spanLon)));
-    return { width, height, bbox };
   }, [snapshot]);
 
   const fetchedLabel = snapshot
@@ -260,95 +229,38 @@ export const NearshoreAis: React.FC = () => {
         </div>
       )}
 
+      {/*
+        The positions themselves are drawn on the shared map layer above, which
+        gives them real coastlines to sit against and lets the same canvas be
+        reused by the other two feeds. This panel keeps the numbers and the
+        vessel list.
+      */}
       {loading && !snapshot ? (
-        <div className="h-[260px] rounded-2xl bg-slate-100 dark:bg-slate-800/60 animate-pulse" />
+        <div className="h-[180px] rounded-2xl bg-slate-100 dark:bg-slate-800/60 animate-pulse" />
       ) : (
-        snapshot &&
-        chart && (
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-5">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4 space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                  {lang === "zh" ? "实时船位分布" : "Live position plot"}
-                </span>
-                <div className="flex flex-wrap items-center gap-2">
-                  {CATEGORY_ORDER.filter((c) => snapshot.byCategory[c] > 0).map((c) => (
-                    <span key={c} className="inline-flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400">
-                      <span className="w-2 h-2 rounded-full" style={{ background: CATEGORY_STYLE[c].dot }} />
-                      {lang === "zh" ? CATEGORY_STYLE[c].labelZh : CATEGORY_STYLE[c].labelEn}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <svg
-                viewBox={`0 0 ${chart.width} ${chart.height}`}
-                className="w-full h-auto rounded-xl bg-gradient-to-b from-sky-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200/70 dark:border-slate-800"
-                preserveAspectRatio="xMidYMid meet"
-                role="img"
-                aria-label={lang === "zh" ? "AIS 实时船位散点图" : "Scatter plot of live AIS vessel positions"}
-              >
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <line
-                    key={`h${i}`}
-                    x1={0}
-                    x2={chart.width}
-                    y1={(chart.height / 4) * i}
-                    y2={(chart.height / 4) * i}
-                    className="stroke-slate-300/40 dark:stroke-slate-700/40"
-                    strokeWidth="0.5"
-                  />
-                ))}
-                {Array.from({ length: 7 }).map((_, i) => (
-                  <line
-                    key={`v${i}`}
-                    y1={0}
-                    y2={chart.height}
-                    x1={(chart.width / 6) * i}
-                    x2={(chart.width / 6) * i}
-                    className="stroke-slate-300/40 dark:stroke-slate-700/40"
-                    strokeWidth="0.5"
-                  />
-                ))}
-                {snapshot.vessels.map((v) => {
-                  const { x, y } = project(v.lat, v.lon, chart.bbox, chart.width, chart.height);
-                  const r = 1.6 + Math.min(2.2, (v.sog ?? 0) / 12);
-                  return (
-                    <circle
-                      key={v.mmsi}
-                      cx={x}
-                      cy={y}
-                      r={r}
-                      fill={CATEGORY_STYLE[v.category].dot}
-                      opacity={v.category === "OTHER" ? 0.45 : 0.8}
-                    >
-                      <title>
-                        {(v.name ?? `MMSI ${v.mmsi}`) +
-                          ` · ${v.sog === null ? "—" : `${v.sog.toFixed(1)} kn`}` +
-                          (v.destination ? ` → ${v.destination}` : "")}
-                      </title>
-                    </circle>
-                  );
-                })}
-              </svg>
-
-              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span>
-                  {snapshot.bbox.minLat.toFixed(1)}°N – {snapshot.bbox.maxLat.toFixed(1)}°N
-                </span>
-                <span>
-                  {snapshot.bbox.minLon.toFixed(1)}°E – {snapshot.bbox.maxLon.toFixed(1)}°E
-                </span>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4 space-y-2">
+        snapshot && (
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-4 space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Navigation className="w-3.5 h-3.5 text-emerald-500" />
                 <span className="text-[11px] font-extrabold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   {lang === "zh" ? "航行中最快的船舶" : "Fastest vessels under way"}
                 </span>
               </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {CATEGORY_ORDER.filter((c) => snapshot.byCategory[c] > 0).map((c) => (
+                  <span key={c} className="inline-flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400">
+                    <span className="w-2 h-2 rounded-full" style={{ background: CATEGORY_STYLE[c].dot }} />
+                    {lang === "zh" ? CATEGORY_STYLE[c].labelZh : CATEGORY_STYLE[c].labelEn}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <p className="text-[10px] font-mono text-slate-400">
+              {lang === "zh"
+                ? `船位已绘制在上方地图层 · ${snapshot.bbox.minLat.toFixed(1)}°–${snapshot.bbox.maxLat.toFixed(1)}°N · ${snapshot.bbox.minLon.toFixed(1)}°–${snapshot.bbox.maxLon.toFixed(1)}°E`
+                : `positions are drawn on the map layer above · ${snapshot.bbox.minLat.toFixed(1)}°–${snapshot.bbox.maxLat.toFixed(1)}°N · ${snapshot.bbox.minLon.toFixed(1)}°–${snapshot.bbox.maxLon.toFixed(1)}°E`}
+            </p>
               <div className="divide-y divide-slate-100 dark:divide-slate-700/60">
                 {movers.map((v) => (
                   <div key={v.mmsi} className="flex items-center justify-between gap-3 py-2">
@@ -391,7 +303,6 @@ export const NearshoreAis: React.FC = () => {
                   <Wrench className="w-3 h-3" /> {snapshot.byCategory.TUG} {lang === "zh" ? "拖轮" : "tug"}
                 </span>
               </div>
-            </div>
           </div>
         )
       )}
@@ -417,8 +328,8 @@ export const NearshoreAis: React.FC = () => {
                 ? "当前已接入自建代理，密钥保留在服务端，前端不含任何凭据。"
                 : "A server-side proxy is configured; the provider key stays on the server and no credential ships to the client."
               : lang === "zh"
-                ? "全球船位需要自建服务端代理（AIS 供应商禁止浏览器直连且要求密钥）。本页在未配置代理时自动回落到免密钥的区域开放数据，并把覆盖范围如实标出。集装箱箱号、冷箱温度、清关状态属于船司 EDI 范畴，任何免费 AIS 源都无法提供。"
-                : "Global positions require your own server-side proxy — AIS providers forbid direct browser connections and require a key. Without one, this page falls back to a key-less regional feed and states its extent. Container numbers, reefer temperatures and customs status come from carrier EDI, which no free AIS feed can supply."}
+                ? "全球船位需要自建服务端代理——仓库内已附 workers/ais-proxy（Cloudflare Worker + aisstream.io 免费密钥），部署后本页自动切换，密钥留在服务端。但要把这笔账算清楚：社区岸基网络实测在波斯湾/霍尔木兹、阿曼湾、红海/曼德海峡均为 0 艘（2026-07-27 复测），船舶离岸超过约 40 海里即从岸基 feed 中消失。也就是说，本作品集最关心的三条通道，恰是免费 AIS 听不到的海域——它们只有卫星 AIS（Spire / Kpler / MarineTraffic，约 $2k–8k/月）能覆盖。免密钥的开放 AIS 源只有芬兰 Digitraffic 一家，其覆盖就是波罗的海本身。另：集装箱箱号、冷箱温度、清关状态属于船司 EDI 范畴，任何 AIS 源（含卫星）都无法提供。"
+                : "Global positions need your own server-side proxy — this repo ships workers/ais-proxy (a Cloudflare Worker plus a free aisstream.io key); deploy it and this page switches over automatically, key staying server-side. Be clear about what that buys, though: the community terrestrial network measured zero vessels in the Persian Gulf / Strait of Hormuz, the Gulf of Oman and the Red Sea / Bab el-Mandeb (re-verified 2026-07-27), and hulls more than ~40 nm offshore drop out of the feed entirely. The three corridors this portfolio is actually about are precisely the waters free AIS cannot hear — they are covered only by satellite AIS (Spire / Kpler / MarineTraffic, roughly $2k–8k/month). The only key-less open AIS feed is Finland's Digitraffic, and its extent is the Baltic itself. Separately: container numbers, reefer temperatures and customs status come from carrier EDI, which no AIS feed — satellite included — can supply."}
           </span>
         </div>
         <div className="flex items-start gap-2">
