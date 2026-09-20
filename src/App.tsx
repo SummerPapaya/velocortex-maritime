@@ -628,9 +628,12 @@ export default function App() {
               </div>
             )}
 
-            {/* LAYOUT 4: CINEMATIC FULLSCREEN MISSION HUD */}
+            {/* LAYOUT 4: CINEMATIC FULLSCREEN MISSION HUD
+                The `dark` class scopes the dark tokens and every `dark:`
+                utility to this subtree, so the fullscreen console stays a
+                night-shift surface even while the rest of the app is light. */}
             {dashboardLayout === "CINEMATIC_HUD" && (
-              <div className="relative bg-slate-950 rounded-3xl border-2 border-indigo-500/50 p-4 sm:p-6 shadow-[0_0_50px_rgba(79,70,229,0.2)] animate-in fade-in zoom-in-95 duration-300 space-y-4">
+              <div className="dark relative bg-slate-950 rounded-3xl border-2 border-indigo-500/50 p-4 sm:p-6 shadow-[0_0_50px_rgba(79,70,229,0.2)] animate-in fade-in zoom-in-95 duration-300 space-y-4">
                 
                 {/* HUD Top Mission Header */}
                 <div className="flex items-center justify-between border-b border-indigo-500/30 pb-4">
